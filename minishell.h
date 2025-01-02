@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/02 11:27:12 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/02 13:12:21 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,19 @@ typedef struct s_data
 {
 	t_list	*envp;
 }	t_data;
+
+typedef struct s_btree
+{
+	struct s_btree	*left;
+	struct s_btree	*right;
+	void			*item;
+}	t_btree;
+
+//============================| BTREE |
+
+t_btree	*ft_btree_new(void *item);
+
+//====================================|
 
 void	init_envp(t_data *data, char **envp);
 
