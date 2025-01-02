@@ -6,7 +6,7 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/02 13:08:31 by cgrasser         ###   ########.fr        #
+#    Updated: 2025/01/02 14:11:50 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc -Wall -Wextra -Werror -O3 -g
 
-SRC = commands.c envp.c main.c btree.c
+SRC = commands.c envp.c main.c
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)
 
