@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/02 14:00:18 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/03 08:12:15 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,23 @@ typedef struct s_data
 	t_list	*envp;
 }	t_data;
 
+void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
+void	errno_msg(char *program, char *desc);
+
+int		env_cmp(void *content, void *name);
+void	free_env(void *env);
 void	init_envp(t_data *data, char **envp);
 char	*ft_getenv(t_data *data, char *name);
 int		ft_setenv(t_data *data, char *name, char *value, int overwrite);
+int		ft_setenv_parse(t_data *data, char *env, int overwrite);
 int		ft_unsetenv(t_data *data, char *name);
 
-void	echo_command(t_data *data, int argc, char **argv);
-void	cd_command(t_data *data, int argc, char **argv);
-void	pwd_command(t_data *data, int argc, char **argv);
-void	export_command(t_data *data, int argc, char **argv);
-void	unset_command(t_data *data, int argc, char **argv);
-void	env_command(t_data *data, int argc, char **argv);
-void	exit_command(t_data *data, int argc, char **argv);
+int		echo_command(t_data *data, int argc, char **argv);
+int		cd_command(t_data *data, int argc, char **argv);
+int		pwd_command(t_data *data, int argc, char **argv);
+int		export_command(t_data *data, int argc, char **argv);
+int		unset_command(t_data *data, int argc, char **argv);
+int		env_command(t_data *data, int argc, char **argv);
+int		exit_command(t_data *data, int argc, char **argv);
 
 #endif

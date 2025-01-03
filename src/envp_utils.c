@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   envp_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 08:04:06 by dvan-hum         ###   ########.fr       */
+/*   Created: 2025/01/02 15:25:52 by dvan-hum          #+#    #+#             */
+/*   Updated: 2025/01/02 15:41:48 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	env_cmp(void *content, void *name)
 {
-	t_data	data;
+	return (ft_strcmp(((char **) content)[0], name));
+}
 
-	data.envp = NULL;
-	init_envp(&data, envp);
-	export_command(&data, argc - 1, argv + 1);
-	ft_lstclear(&data.envp, free_env);
+void	free_env(void *env)
+{
+	free(((char **) env)[0]);
+	free(((char **) env)[1]);
+	free(env);
 }
