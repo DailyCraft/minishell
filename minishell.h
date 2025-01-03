@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 12:39:54 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/03 15:43:42 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ enum	e_redirects
 {
 	REDIRECT_INPUT,
 	REDIRECT_OUTPUT,
-	REDIRECT_OUTPUT_APPEND,
+	REDIRECT_APPEND,
 	HERE_DOC
 };
 
@@ -53,11 +53,10 @@ typedef struct s_redirect
 typedef struct s_command
 {
 	int					argc;
-	char				*argv;
+	char				**argv;
 	struct s_command	*pipe;
-	t_redirect			*redirects;
+	t_list				*redirects;
 }	t_command;
-
 
 char	*ft_basename(char *path);
 void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
@@ -73,7 +72,7 @@ int		ft_setenv(t_data *data, char *name, char *value, int overwrite);
 int		ft_setenv_parse(t_data *data, char *env, int overwrite);
 int		ft_unsetenv(t_data *data, char *name);
 
-int		execute_line(t_data *data, char *command_line);
+int		execute(t_data *data, t_command *command, int input_fd);
 
 int		echo_command(t_data *data, int argc, char **argv);
 int		cd_command(t_data *data, int argc, char **argv);
