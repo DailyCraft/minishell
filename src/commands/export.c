@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:50:21 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 08:14:32 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/03 11:31:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ int	export_command(t_data *data, int argc, char **argv)
 {
 	int		i;
 
-	if (argc == 0)
+	if (argc == 1)
 		return (no_args(data));
-	i = 0;
+	i = 1;
 	while (i < argc)
 	{
 		ft_setenv_parse(data, argv[i], 1);

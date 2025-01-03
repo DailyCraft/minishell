@@ -6,7 +6,7 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/03 07:53:28 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/03 09:10:55 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc -Wall -Wextra -Werror -O3 -g
 
-SRC = envp_utils.c envp.c main.c utils.c \
+SRC = envp_utils.c envp.c execution.c main.c utils.c \
 	commands/cd.c commands/echo.c commands/export.c commands/pwd.c commands/unset.c
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 08:12:15 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/03 12:39:54 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-# include <stdio.h>
 # include <string.h>
 # include <term.h>
-//# include <termios.h>
 # include <sys/ioctl.h>
 # include <sys/resource.h>
 # include <sys/stat.h>
@@ -34,19 +32,48 @@
 
 typedef struct s_data
 {
+	char	*program;
 	t_list	*envp;
 }	t_data;
 
+enum	e_redirects
+{
+	REDIRECT_INPUT,
+	REDIRECT_OUTPUT,
+	REDIRECT_OUTPUT_APPEND,
+	HERE_DOC
+};
+
+typedef struct s_redirect
+{
+	enum e_redirects	type;
+	char				*value;
+}	t_redirect;
+
+typedef struct s_command
+{
+	int					argc;
+	char				*argv;
+	struct s_command	*pipe;
+	t_redirect			*redirects;
+}	t_command;
+
+
+char	*ft_basename(char *path);
 void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
 void	errno_msg(char *program, char *desc);
+void	error_msg(char *name, char *desc);
 
 int		env_cmp(void *content, void *name);
 void	free_env(void *env);
+char	**flat_envp(t_data *data);
 void	init_envp(t_data *data, char **envp);
 char	*ft_getenv(t_data *data, char *name);
 int		ft_setenv(t_data *data, char *name, char *value, int overwrite);
 int		ft_setenv_parse(t_data *data, char *env, int overwrite);
 int		ft_unsetenv(t_data *data, char *name);
+
+int		execute_line(t_data *data, char *command_line);
 
 int		echo_command(t_data *data, int argc, char **argv);
 int		cd_command(t_data *data, int argc, char **argv);

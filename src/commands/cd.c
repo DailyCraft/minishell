@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:48:39 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 07:52:58 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/03 11:31:28 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	cd_command(t_data *data, int argc, char **argv)
 {
 	char	*path;
 
-	if (argc == 0)
+	if (argc == 1)
 	{
 		path = ft_getenv(data, "HOME");
 		if (path && path[0] != 0 && chdir(path) == -1)
@@ -25,7 +25,7 @@ int	cd_command(t_data *data, int argc, char **argv)
 			return (1);
 		}
 	}
-	else if (argc == 1 && chdir(argv[0]) == -1)
+	else if (argc == 2 && chdir(argv[0]) == -1)
 	{
 		errno_msg("cd", argv[0]);
 		return (1);
