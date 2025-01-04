@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:52:37 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 11:17:38 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/04 16:08:10 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,10 @@ void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *))
 	}
 }
 
-void	errno_msg(char *program, char *desc)
+void	free_data(t_data *data)
 {
-	ft_putstr_fd(ft_basename(program), 2);
-	ft_putstr_fd(": ", 2);
-	error_msg(desc, strerror(errno));
-}
-
-void	error_msg(char *name, char *desc)
-{
-	ft_putstr_fd(name, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(desc, 2);
+	if (!data->program)
+		return ;
+	ft_lstclear(&data->envp, free_env);
+	data->program = NULL;
 }

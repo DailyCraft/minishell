@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 15:43:42 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/04 17:29:26 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,38 +30,48 @@
 # include <sys/wait.h>
 # include "libft.h"
 
+# define OUTPUT 1
+# define APPEND 2
+# define INPUT 1
+# define HERE_DOC 2
+
 typedef struct s_data
 {
 	char	*program;
 	t_list	*envp;
+	int		last_status;
 }	t_data;
 
-enum	e_redirects
+enum	e_type
 {
-	REDIRECT_INPUT,
-	REDIRECT_OUTPUT,
-	REDIRECT_APPEND,
-	HERE_DOC
+	SUB_SHELL,
+	COMMAND
 };
 
-typedef struct s_redirect
+typedef struct s_command	t_command;
+struct	s_command
 {
-	enum e_redirects	type;
-	char				*value;
-}	t_redirect;
-
-typedef struct s_command
-{
-	int					argc;
-	char				**argv;
-	struct s_command	*pipe;
-	t_list				*redirects;
-}	t_command;
+	enum e_type	type;
+	union
+	{
+		char	*command_line;
+		struct
+		{
+			int		argc;
+			char	**argv;
+		};	
+	};
+	t_list		*inputs;
+	t_list		*outputs;
+	t_command	*pipe;
+};
 
 char	*ft_basename(char *path);
 void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
+void	free_data(t_data *data);
 void	errno_msg(char *program, char *desc);
 void	error_msg(char *name, char *desc);
+int		errno_safe(t_data *data, char *name, int function);
 
 int		env_cmp(void *content, void *name);
 void	free_env(void *env);
@@ -72,7 +82,11 @@ int		ft_setenv(t_data *data, char *name, char *value, int overwrite);
 int		ft_setenv_parse(t_data *data, char *env, int overwrite);
 int		ft_unsetenv(t_data *data, char *name);
 
-int		execute(t_data *data, t_command *command, int input_fd);
+int		execute(t_data *data, t_command *process);
+int		run_command(t_data *data, t_command *command, int in_fork);
+int		execute_pipeline(t_data *data, t_command *command, int input_fd);
+int		open_output(t_data *data, t_command *command);
+char	*resolve_path(t_data *data, char *bin);
 
 int		echo_command(t_data *data, int argc, char **argv);
 int		cd_command(t_data *data, int argc, char **argv);
