@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/04 17:29:26 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/06 20:44:05 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,16 @@ int		export_command(t_data *data, int argc, char **argv);
 int		unset_command(t_data *data, int argc, char **argv);
 int		env_command(t_data *data, int argc, char **argv);
 int		exit_command(t_data *data, int argc, char **argv);
+
+t_command	*command_new(enum e_type type, t_list *inputs, t_list *outputs);
+void		set_command_line(t_command *command, char *command_line);
+void		set_command_argv(t_command *command, char **argv);
+void		command_add_pipe(t_command **command, t_command *pipe);
+
+void		clear_command(void *command);
+
+t_btree		*parse_input(char *input);
+
+void		minishell(t_data *data);
 
 #endif

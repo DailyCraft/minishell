@@ -6,7 +6,7 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/04 15:52:51 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/06 21:02:39 by cgrasser         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CC = gcc -Wall -Wextra -Werror -O3 -g
 
 SRC = envp_utils.c envp.c errors.c main.c utils.c \
 	commands/cd.c commands/echo.c commands/env.c commands/exit.c commands/export.c commands/pwd.c commands/unset.c \
-	execution/exec.c execution/pipeline.c execution/utils.c
+	execution/exec.c execution/pipeline.c execution/utils.c parsing/command.c parsing/command_del.c parsing/parsing.c \
+	minishell.c
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)
 
@@ -31,7 +32,7 @@ all: $(NAME)
 
 $(NAME): libft/libft.a $(OBJ)
 	echo "\n\t\e[1;32mBuilding\e[0m \e[36m$(NAME)\e[0m\n"
-	$(CC) -o $(NAME) $(OBJ) -L ./libft -lft
+	$(CC) -o $(NAME) $(OBJ) -L ./libft -lft -lreadline
 
 obj/%.o: src/%.c $(HEADERS)
 	echo "$(NAME) \e[90m➤\e[0m \e[32mCompiling\e[0m \e[36m$<\e[0m"

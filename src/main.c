@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/04 17:26:40 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:37:50 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,18 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
+	(void) argc;
 
 	data.program = argv[0];
 	data.envp = NULL;
 	init_envp(&data, envp);
 
-	char *cat[] = {"cat", "-e", NULL};
+	/*char *cat[] = {"cat", "-e", NULL};
 	t_command cat_cmd = {.type = COMMAND, .argc = 2, .argv = cat, .pipe = NULL};
 	t_list output = {.content = "\001a", .next = NULL};
 	t_command command = {.type = COMMAND, .argc = argc - 1, .argv = argv + 1, .pipe = &cat_cmd, .outputs = &output};
 	(void) cat_cmd;
-	execute(&data, &command);
+	execute(&data, &command);*/
 	free_data(&data);
+	minishell(&data);
 }
