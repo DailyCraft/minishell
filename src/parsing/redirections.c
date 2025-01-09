@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 10:12:09 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/09 15:46:54 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/09 22:15:36 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,12 @@ static int	set_redirection_file(t_command *command, char *line, char redirect)
 
 int	set_redirections(t_command *command, char *line)
 {
-	int	i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (is_here_doc(line + i))
-			i += set_redirection_file(command, line + i + 2, HERE_DOC) + 2;
-		else if (is_input(line + i))
-			i += set_redirection_file(command, line + i + 1, INPUT) + 1;
-		else if (is_output(line + i))
-			i += set_redirection_file(command, line + i + 1, OUTPUT) + 1;
-		else if (is_append(line + i))
-			i += set_redirection_file(command, line + i + 2, APPEND) + 2;
-		else
-			i++;
-	}
-	return (i);
+	if (is_here_doc(line))
+		return (set_redirection_file(command, line + 2, HERE_DOC) + 2);
+	else if (is_input(line))
+		return (set_redirection_file(command, line + 1, INPUT) + 1);
+	else if (is_output(line))
+		return (set_redirection_file(command, line + 1, OUTPUT) + 1);
+	else
+		return (set_redirection_file(command, line + 2, APPEND) + 2);
 }
