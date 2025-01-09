@@ -6,7 +6,7 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/06 21:02:39 by cgrasser         ###   ########.fr        #
+#    Updated: 2025/01/09 14:58:07 by cgrasser         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CC = gcc -Wall -Wextra -Werror -O3 -g
 SRC = envp_utils.c envp.c errors.c main.c utils.c \
 	commands/cd.c commands/echo.c commands/env.c commands/exit.c commands/export.c commands/pwd.c commands/unset.c \
 	execution/exec.c execution/pipeline.c execution/utils.c parsing/command.c parsing/command_del.c parsing/parsing.c \
-	minishell.c
+	minishell.c parsing/pipe.c parsing/redirections.c parsing/redirections_op.c
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)
 

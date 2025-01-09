@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/06 20:44:05 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:08:47 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 
 # define OUTPUT 1
 # define APPEND 2
-# define INPUT 1
-# define HERE_DOC 2
+# define INPUT 3
+# define HERE_DOC 4
 
 typedef struct s_data
 {
@@ -96,10 +96,18 @@ int		unset_command(t_data *data, int argc, char **argv);
 int		env_command(t_data *data, int argc, char **argv);
 int		exit_command(t_data *data, int argc, char **argv);
 
-t_command	*command_new(enum e_type type, t_list *inputs, t_list *outputs);
-void		set_command_line(t_command *command, char *command_line);
-void		set_command_argv(t_command *command, char **argv);
-void		command_add_pipe(t_command **command, t_command *pipe);
+t_command	*command_new(char *command_line);
+
+int			is_pipe(char *command_line);
+int			find_pipe(char *command_line);
+
+int			is_here_doc(char *command_line);
+int			is_append(char *command_line);
+int			is_input(char *command_line);
+int			is_output(char *command_line);
+int			is_redirection(char *command_line);
+
+int			set_redirections(t_command *command, char *commamd_line);
 
 void		clear_command(void *command);
 
