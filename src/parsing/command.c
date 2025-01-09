@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/09 15:14:49 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:41:32 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ int	set_argv(t_command *command, char *command_line)
 		return (0);
 	line = ft_substr(command_line, 0, i);
 	command->argv = ft_split(line, ' ');
+	command->argc = 0;
+	while (command->argv[command->argc])
+		command->argc++;
 	free(line);
 	return (i);
 }
@@ -42,6 +45,7 @@ t_command	*command_new(char *command_line)
 	free(line);
 	line = ft_substr(command_line, i, j - i);
 	set_redirections(command, line);
+	free(line);
 	if (command_line[i] == '|')
 		command->pipe = command_new(command_line + i + 1);
 	command->type = COMMAND;

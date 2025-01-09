@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/09 14:08:47 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:47:07 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,35 +66,41 @@ struct	s_command
 	t_command	*pipe;
 };
 
-char	*ft_basename(char *path);
-void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
-void	free_data(t_data *data);
-void	errno_msg(char *program, char *desc);
-void	error_msg(char *name, char *desc);
-int		errno_safe(t_data *data, char *name, int function);
+char		*ft_basename(char *path);
+void		ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
+void		free_data(t_data *data);
+void		init_interactive(t_data *data);
+char		*ft_readline(char *prompt);
 
-int		env_cmp(void *content, void *name);
-void	free_env(void *env);
-char	**flat_envp(t_data *data);
-void	init_envp(t_data *data, char **envp);
-char	*ft_getenv(t_data *data, char *name);
-int		ft_setenv(t_data *data, char *name, char *value, int overwrite);
-int		ft_setenv_parse(t_data *data, char *env, int overwrite);
-int		ft_unsetenv(t_data *data, char *name);
+void		errno_msg(char *program, char *desc);
+void		error_msg(char *name, char *desc);
+int			errno_safe(t_data *data, char *name, int function);
 
-int		execute(t_data *data, t_command *process);
-int		run_command(t_data *data, t_command *command, int in_fork);
-int		execute_pipeline(t_data *data, t_command *command, int input_fd);
-int		open_output(t_data *data, t_command *command);
-char	*resolve_path(t_data *data, char *bin);
+int			env_cmp(void *content, void *name);
+void		free_env(void *env);
+char		**flat_envp(t_data *data);
+void		init_envp(t_data *data, char **envp);
+char		*ft_getenv(t_data *data, char *name);
+int			ft_setenv(t_data *data, char *name, char *value, int overwrite);
+int			ft_setenv_parse(t_data *data, char *env, int overwrite);
+int			ft_unsetenv(t_data *data, char *name);
 
-int		echo_command(t_data *data, int argc, char **argv);
-int		cd_command(t_data *data, int argc, char **argv);
-int		pwd_command(t_data *data, int argc, char **argv);
-int		export_command(t_data *data, int argc, char **argv);
-int		unset_command(t_data *data, int argc, char **argv);
-int		env_command(t_data *data, int argc, char **argv);
-int		exit_command(t_data *data, int argc, char **argv);
+int			execute(t_data *data, t_command *command);
+int			run_command(t_data *data, t_command *command, int in_fork);
+int			execute_pipeline(t_data *data, t_command *command, int input_fd);
+int			open_output(t_data *data, t_command *command);
+int			open_input(t_data *data, t_command *command);
+char		*get_heredoc(t_command *command);
+char		*resolve_path(t_data *data, char *bin);
+char		*heredoc(char *limit);
+
+int			echo_command(t_data *data, int argc, char **argv);
+int			cd_command(t_data *data, int argc, char **argv);
+int			pwd_command(t_data *data, int argc, char **argv);
+int			export_command(t_data *data, int argc, char **argv);
+int			unset_command(t_data *data, int argc, char **argv);
+int			env_command(t_data *data, int argc, char **argv);
+int			exit_command(t_data *data, int argc, char **argv);
 
 t_command	*command_new(char *command_line);
 
@@ -107,12 +113,10 @@ int			is_input(char *command_line);
 int			is_output(char *command_line);
 int			is_redirection(char *command_line);
 
-int			set_redirections(t_command *command, char *commamd_line);
+int			set_redirections(t_command *command, char *line);
 
 void		clear_command(void *command);
 
 t_btree		*parse_input(char *input);
-
-void		minishell(t_data *data);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 13:47:24 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/04 17:25:03 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:40:56 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	open_output(t_data *data, t_command *command)
 	t_list	*lst;
 	int		flag;
 
-	lst = command->outputs;
 	fd = 1;
+	lst = command->outputs;
 	while (lst)
 	{
 		if (fd != 1)
@@ -39,6 +39,51 @@ int	open_output(t_data *data, t_command *command)
 	return (fd);
 }
 
+int	open_input(t_data *data, t_command *command)
+{
+	int		fd;
+	t_list	*lst;
+
+	fd = 0;
+	lst = command->inputs;
+	while (lst)
+	{
+		if (((char *) lst->content)[0] == INPUT)
+		{
+			if (fd != 0)
+				close(fd);
+			fd = open(lst->content + 1, O_RDONLY);
+			if (fd < 0)
+			{
+				errno_msg(data->program, lst->content + 1);
+				return (-1);
+			}
+		}
+		lst = lst->next;
+	}
+	return (fd);
+}
+
+char	*get_heredoc(t_command *command)
+{
+	char	*result;
+	t_list	*lst;
+
+	result = NULL;
+	lst = command->inputs;
+	while (lst)
+	{
+		if (((char *) lst->content)[0] == HERE_DOC)
+		{
+			if (result)
+				free(result);
+			result = heredoc(lst->content + 1);
+		}
+		lst = lst->next;
+	}
+	return (result);
+}
+
 char	*resolve_path(t_data *data, char *bin)
 {
 	char	*path_env;
@@ -55,12 +100,15 @@ char	*resolve_path(t_data *data, char *bin)
 	{
 		path = ft_strsjoin((const char *[]){paths[i], "/", bin, NULL});
 		if (!path || access(path, F_OK) == 0)
+		{
+			ft_free_split(paths);
 			return (path);
+		}
 		free(path);
 		i++;
 	}
 	ft_free_split(paths);
 	if (access(bin, F_OK) == 0)
-		return (bin);
+		return (ft_strdup(bin));
 	return (NULL);
 }

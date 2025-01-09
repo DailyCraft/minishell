@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 10:12:09 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/09 15:17:37 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:46:54 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	set_redirection_file(t_command *command, char *command_line, char redirect)
+static int	set_redirection_file(t_command *command, char *line, char redirect)
 {
 	int		i;
 	int		j;
@@ -21,13 +21,13 @@ int	set_redirection_file(t_command *command, char *command_line, char redirect)
 
 	i = 0;
 	j = 0;
-	while (ft_isspace(command_line[i]))
+	while (ft_isspace(line[i]))
 		i++;
-	while (command_line[i + j] && !ft_isspace(command_line[i + j]))
+	while (line[i + j] && !ft_isspace(line[i + j]))
 		j++;
 	file = malloc((j + 2) * sizeof(char));
 	file[0] = redirect;
-	ft_memcpy(file + 1, command_line + i, j);
+	ft_memcpy(file + 1, line + i, j);
 	file[j + 1] = 0;
 	node = ft_lstnew(file);
 	if (redirect == HERE_DOC || redirect == INPUT)

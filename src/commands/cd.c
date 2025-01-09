@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:48:39 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 11:31:28 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:42:40 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ int	cd_command(t_data *data, int argc, char **argv)
 			return (1);
 		}
 	}
-	else if (argc == 2 && chdir(argv[0]) == -1)
+	else if (argc == 2 && chdir(argv[1]) == -1)
 	{
-		errno_msg("cd", argv[0]);
+		errno_msg("cd", argv[1]);
 		return (1);
 	}
 	if (ft_getenv(data, "PWD"))

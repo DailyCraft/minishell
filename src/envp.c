@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 10:45:10 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 08:14:50 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:04:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	init_envp(t_data *data, char **envp)
 		ft_setenv_parse(data, *envp, 0);
 		envp++;
 	}
-	ft_unsetenv(data, "_");
 }
 
 char	*ft_getenv(t_data *data, char *name)
