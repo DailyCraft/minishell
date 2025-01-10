@@ -6,7 +6,7 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/09 15:48:47 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/10 14:29:24 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,9 @@ NAME = minishell
 
 CC = gcc -Wall -Wextra -Werror -O3 -g
 
-SRC = envp_utils.c envp.c errors.c main.c utils.c \
+SRC = envp_utils.c envp.c errors.c main.c tty.c utils.c \
 	commands/cd.c commands/echo.c commands/env.c commands/exit.c commands/export.c commands/pwd.c commands/unset.c \
-	execution/exec.c execution/heredoc.c execution/pipeline.c execution/utils.c \
+	execution/exec.c execution/pipeline.c execution/redirect.c execution/runs.c execution/utils.c \
 	parsing/command_del.c parsing/command.c parsing/logical_operator.c parsing/parsing.c parsing/pipe.c parsing/redirections_op.c parsing/redirections.c
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)
@@ -54,3 +54,9 @@ fclean:
 re: fclean all
 
 bonus: all
+
+gdb: all
+	gdb -q -tui ./minishell
+
+run: all
+	./minishell

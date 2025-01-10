@@ -6,109 +6,43 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 13:47:24 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/09 15:40:56 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:28:39 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	open_output(t_data *data, t_command *command)
+int	isdir(char *path)
 {
-	int		fd;
-	t_list	*lst;
-	int		flag;
+	struct stat	statbuf;
 
-	fd = 1;
-	lst = command->outputs;
-	while (lst)
-	{
-		if (fd != 1)
-			close(fd);
-		if (((char *) lst->content)[0] == 1)
-			flag = O_TRUNC;
-		else
-			flag = O_APPEND;
-		fd = open(lst->content + 1, O_CREAT | O_WRONLY | flag, 0664);
-		if (fd < 0)
-		{
-			errno_msg(data->program, lst->content + 1);
-			return (-1);
-		}
-		lst = lst->next;
-	}
-	return (fd);
+	stat(path, &statbuf);
+	return (S_ISDIR(statbuf.st_mode));
 }
 
-int	open_input(t_data *data, t_command *command)
+char	*resolve_path(t_data *data, char *child)
 {
-	int		fd;
-	t_list	*lst;
-
-	fd = 0;
-	lst = command->inputs;
-	while (lst)
-	{
-		if (((char *) lst->content)[0] == INPUT)
-		{
-			if (fd != 0)
-				close(fd);
-			fd = open(lst->content + 1, O_RDONLY);
-			if (fd < 0)
-			{
-				errno_msg(data->program, lst->content + 1);
-				return (-1);
-			}
-		}
-		lst = lst->next;
-	}
-	return (fd);
-}
-
-char	*get_heredoc(t_command *command)
-{
-	char	*result;
-	t_list	*lst;
-
-	result = NULL;
-	lst = command->inputs;
-	while (lst)
-	{
-		if (((char *) lst->content)[0] == HERE_DOC)
-		{
-			if (result)
-				free(result);
-			result = heredoc(lst->content + 1);
-		}
-		lst = lst->next;
-	}
-	return (result);
-}
-
-char	*resolve_path(t_data *data, char *bin)
-{
-	char	*path_env;
 	char	*path;
 	char	**paths;
 	int		i;
 
-	path_env = ft_getenv(data, "PATH");
-	if (!path_env)
-		return (NULL);
-	paths = ft_split(path_env, ':');
+	if (ft_strchr(child, '/') != NULL || !ft_getenv(data, "PATH"))
+	{
+		if (access(child, F_OK) == -1)
+			return (errno = ENOENT, NULL);
+		if (isdir(child))
+			return (errno = EISDIR, NULL);
+		return (ft_strdup(child));
+	}
+	paths = ft_split(ft_getenv(data, "PATH"), ':');
 	i = 0;
 	while (paths[i])
 	{
-		path = ft_strsjoin((const char *[]){paths[i], "/", bin, NULL});
-		if (!path || access(path, F_OK) == 0)
-		{
-			ft_free_split(paths);
-			return (path);
-		}
+		path = ft_strsjoin((const char *[]){paths[i], "/", child, NULL});
+		if (!path || (access(path, F_OK) == 0 && !isdir(path)))
+			return (ft_free_split(paths), path);
 		free(path);
 		i++;
 	}
-	ft_free_split(paths);
-	if (access(bin, F_OK) == 0)
-		return (ft_strdup(bin));
-	return (NULL);
+	return (ft_free_split(paths), errno = ESRCH, NULL);
 }

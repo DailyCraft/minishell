@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/09 13:49:34 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:54:08 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,13 @@ static void	loop(t_data *data)
 	input = ft_readline("minishell$ ");
 	while (input)
 	{
-		btree = parse_input(input);
-		if (btree)
-			iterate_btree(data, btree);
+		btree = parse_input(data, input);
 		if (btree && isatty(STDIN_FILENO))
 			add_history(input);
-		else
-			free(input);
-		ft_btree_clear(&btree, clear_command);
+		free(input);
+		if (btree)
+			iterate_btree(data, btree);
+		ft_btree_clear(&data->btree, clear_command);
 		input = ft_readline("minishell$ ");
 	}
 	if (isatty(STDIN_FILENO))
@@ -62,13 +61,18 @@ static void	loop(t_data *data)
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
+	int		last_status;
 
 	(void) argc;
 	data.program = argv[0];
+	data.last_status = 0;
 	data.envp = NULL;
+	data.btree = NULL;
 	init_envp(&data, envp);
 	signal(SIGINT, catch_sigint);
 	init_interactive(&data);
 	loop(&data);
+	last_status = data.last_status;
 	free_data(&data);
+	return (last_status);
 }

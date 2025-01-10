@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:51:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/04 17:36:46 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:04:47 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static int	child_process(t_data *data, t_command *command, int input, int *fds)
 	}
 	status = run_command(data, command, 0);
 	free_data(data);
+	free_gnl();
 	exit(status);
 }
 

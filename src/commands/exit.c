@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 13:06:46 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/04 15:33:59 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/10 08:18:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	exit_command(t_data *data, int argc, char **argv)
 		return (1);
 	}
 	if (argc == 1)
-		(free_data(data), exit(0));
+		(free_data(data), exit(data->last_status));
 	trim = ft_strtrim(argv[1], " \t\n\v\f\r");
 	value = ft_clear_atoi(trim, &unclear);
 	free(trim);
