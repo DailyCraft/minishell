@@ -6,71 +6,60 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:43:53 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 11:30:28 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:01:57 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	errno_msg(char *program, char *desc)
+static void	print_minishell(t_data *data)
 {
-	char	*basename;
+	char	*value;
 
-	basename = ft_basename(program);
-	ft_putstr_fd(basename, 2);
-	free(basename);
-	ft_putstr_fd(": ", 2);
-	error_msg(desc, strerror(errno));
+	if (data && data->program)
+		value = data->program;
+	else
+		value = "minishell";
+	value = ft_basename(value);
+	ft_putstr_fd(value, 2);
+	free(value);
 }
 
-void	error_msg(char *name, char *desc)
+/**
+ * The format can contains:
+ *   %m: print commonly 'minishell'
+ *   %s: print an argument
+ *   %n: print errno message
+ * All others % format are not managed.
+ */
+void	error_msg(t_data *data, char *format, char **args)
 {
-	ft_putstr_fd(name, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(desc, 2);
+	char	*percent;
+	int		arg_i;
+
+	arg_i = 0;
+	percent = ft_strchr(format, '%');
+	while (percent)
+	{
+		write(2, format, percent - format);
+		format = percent + 2;
+		if (percent[1] == 'm')
+			print_minishell(data);
+		else if (percent[1] == 's')
+			ft_putstr_fd(args[arg_i++], 2);
+		else if (percent[1] == 'n')
+			ft_putstr_fd(strerror(errno), 2);
+		percent = ft_strchr(format, '%');
+	}
+	ft_putendl_fd(format, 2);
 }
 
 int	errno_safe(t_data *data, char *name, int function)
 {
-	char	*program;
-
 	if (function < 0)
 	{
-		if (data)
-			program = data->program;
-		else
-			program = "minishell";
-		errno_msg(program, name);
+		error_msg(data, "%m: %s %n", (char *[]){name});
 		exit(1);
 	}
 	return (function);
-}
-
-void	err_ms_prog_msg_no(t_data *data, char *program, char *msg)
-{
-	char	*basename;
-
-	basename = ft_basename(data->program);
-	ft_putstr_fd(basename, 2);
-	free(basename);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(program, 2);
-	ft_putstr_fd(": ", 2);
-	error_msg(msg, strerror(errno));
-}
-
-void	err_ms_prog_msg(t_data *data, char *program, char *msg)
-{
-	char	*basename;
-
-	basename = ft_basename(data->program);
-	ft_putstr_fd(basename, 2);
-	free(basename);
-	ft_putstr_fd(": ", 2);
-	error_msg(program, msg);
-}
-
-void	err_ms_msg_no(t_data *data, char *msg)
-{
-	err_ms_prog_msg(data, msg, strerror(errno));
 }

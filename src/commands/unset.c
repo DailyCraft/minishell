@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:49:53 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 08:42:27 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 12:09:10 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	unset_command(t_data *data, int argc, char **argv)
 	i = 1;
 	failed = 0;
 	while (i < argc)
-	{
 		ft_unsetenv(data, argv[i++]);
-	}
 	return (failed);
 }

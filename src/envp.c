@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 10:45:10 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/07 09:04:51 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:58:44 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	init_envp(t_data *data, char **envp)
 {
 	while (*envp)
 	{
-		ft_setenv_parse(data, *envp, 0);
+		ft_setenv_parse(data, *envp);
 		envp++;
 	}
 }
@@ -32,51 +32,50 @@ char	*ft_getenv(t_data *data, char *name)
 		return (NULL);
 }
 
-int	ft_setenv(t_data *data, char *name, char *value, int overwrite)
+int	ft_setenv(t_data *data, char *name, char *value)
 {
-	t_list	*lst;
 	char	**content;
 
-	if (name == NULL)
+	if (!env_name_valid(name))
 		return (-1);
-	lst = ft_lstgeti(data->envp, ft_lstindex(data->envp, name, env_cmp));
-	if (lst)
-	{
-		if (overwrite)
-			ft_unsetenv(data, name);
-		else
-			return (0);
-	}
+	ft_unsetenv(data, name);
 	content = malloc(2 * sizeof(char *));
-	if (!content)
-		return (-1);
 	content[0] = ft_strdup(name);
-	content[1] = ft_strdup(value);
-	lst = ft_lstnew(content);
-	if (!lst)
-		return (-1);
-	ft_lstadd_back(&data->envp, lst);
+	if (value)
+		content[1] = ft_strdup(value);
+	else
+		content[1] = NULL;
+	ft_lstadd_back(&data->envp, ft_lstnew(content));
 	return (0);
 }
 
-int	ft_setenv_parse(t_data *data, char *env, int overwrite)
+int	ft_setenv_parse(t_data *data, char *env)
 {
 	int		sep;
 	char	*name;
 	int		result;
 
 	sep = ft_strchr(env, '=') - env;
+	if (sep < 0)
+		sep = ft_strlen(env);
 	name = ft_memdup(env, sep + 1);
 	name[sep] = 0;
-	result = ft_setenv(data, name, env + sep + 1, overwrite);
+	if (env[sep] != 0)
+		result = ft_setenv(data, name, env + sep + 1);
+	else
+		result = ft_setenv(data, name, NULL);
 	free(name);
 	return (result);
 }
 
 int	ft_unsetenv(t_data *data, char *name)
 {
-	if (name == NULL)
+	int	i;
+
+	if (!env_name_valid(name))
 		return (-1);
-	ft_lstdeli(&data->envp, ft_lstindex(data->envp, name, env_cmp), free_env);
+	i = ft_lstindex(data->envp, name, env_cmp);
+	if (i != -1)
+		ft_lstdeli(&data->envp, i, free_env);
 	return (0);
 }

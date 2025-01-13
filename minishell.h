@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 14:29:56 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:16:37 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,30 +74,28 @@ struct	s_command
 // Environment variables
 void		init_envp(t_data *data, char **envp);
 char		*ft_getenv(t_data *data, char *name);
-int			ft_setenv(t_data *data, char *name, char *value, int overwrite);
-int			ft_setenv_parse(t_data *data, char *env, int overwrite);
+int			ft_setenv(t_data *data, char *name, char *value);
+int			ft_setenv_parse(t_data *data, char *env);
 int			ft_unsetenv(t_data *data, char *name);
 
+int			env_name_valid(char *name);
 int			env_cmp(void *content, void *name);
 void		free_env(void *env);
 char		**flat_envp(t_data *data);
 
 // Error messages
-void		errno_msg(char *program, char *desc);
-void		error_msg(char *name, char *desc);
+void		error_msg(t_data *data, char *format, char **args);
 int			errno_safe(t_data *data, char *name, int function);
-void		err_ms_prog_msg_no(t_data *data, char *program, char *msg);
-void		err_ms_prog_msg(t_data *data, char *program, char *msg);
-void		err_ms_msg_no(t_data *data, char *msg);
 
 // Utils
 char		*ft_basename(char *path);
 void		ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
+t_list		*ft_lstdup(t_list *lst);
 char		**strsdup(char **strs);
 void		free_data(t_data *data);
 
 void		init_interactive(t_data *data);
-char		*ft_readline(char *prompt);
+char		*ft_readline(t_data *data, char *prompt);
 void		free_gnl(void);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -105,6 +103,7 @@ void		free_gnl(void);
 ///////////////////////////////////////////////////////////////////////////////
 
 // Execution
+void		iterate_btree(t_data *data);
 int			execute(t_data *data, t_command *command);
 int			execute_pipeline(t_data *data, t_command *command, int input_fd);
 int			run_command(t_data *data, t_command *command, int in_fork);
@@ -114,7 +113,7 @@ int			run_sub_shell(t_data *data, char *command_line, int in_fork);
 // Redirections
 int			open_output(t_data *data, t_command *command);
 int			open_input(t_data *data, t_command *command);
-char		*get_heredoc(t_command *command);
+char		*get_heredoc(t_data *data, t_command *command);
 
 // Utils
 int			isdir(char *path);
@@ -128,6 +127,8 @@ int			exit_command(t_data *data, int argc, char **argv);
 int			export_command(t_data *data, int argc, char **argv);
 int			pwd_command(t_data *data, int argc, char **argv);
 int			unset_command(t_data *data, int argc, char **argv);
+
+void		pwd(t_data *data);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// ------------------------------- Parsing ------------------------------- ///

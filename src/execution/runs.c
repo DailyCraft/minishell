@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 14:11:49 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:52:26 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	program = data->program;
 	free_data(data);
 	execve(path, argv, envp);
-	errno_msg(program, path);
+	error_msg(NULL, "%s: %s: %n", (char *[]){program, path});
 	free(path);
 	ft_free_split(argv);
 	ft_free_split(envp);
@@ -41,11 +41,14 @@ int	run_external(t_data *data, t_command *command, int in_fork)
 	if (!path)
 	{
 		if (errno == ESRCH)
-			return (error_msg(command->argv[0], "command not found"), 127);
+			return (error_msg(data, "%s: command not found",
+					(char *[]){command->argv[0]}), 127);
 		if (errno == ENOENT)
-			return (err_ms_msg_no(data, command->argv[0]), 127);
+			return (error_msg(data, "%m: %s: %n",
+					(char *[]){command->argv[0]}), 127);
 		if (errno == EISDIR)
-			return (err_ms_msg_no(data, command->argv[0]), 126);
+			return (error_msg(data, "%m: %s: %n",
+					(char *[]){command->argv[0]}), 126);
 	}
 	if (in_fork)
 	{
@@ -72,8 +75,9 @@ int	run_sub_shell(t_data *data, char *command_line, int in_fork)
 	}
 	(void) data;
 	(void) command_line;
-	// free_btree(data)
-	// populate_btree(data, command_line);
-	// read btree
-	return (0);
+	ft_btree_clear(&data->btree, clear_command);
+	parse_input(data, command_line);
+	iterate_btree(data);
+	free_data(data);
+	exit(0);
 }

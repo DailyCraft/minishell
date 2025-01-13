@@ -6,18 +6,46 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 11:29:29 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 13:06:42 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 08:01:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	echo_command(t_data *data, int argc, char **argv)
+static int	is_n(char *arg)
 {
 	int	i;
 
-	(void) data;
+	if (arg[0] != '-')
+		return (0);
 	i = 1;
+	while (arg[i] == 'n')
+		i++;
+	return (i > 1 && arg[i] == 0);
+}
+
+static int	parse_options(int *argc, char ***argv)
+{
+	int	i;
+
+	i = 0;
+	while (i < *argc && is_n((*argv)[i]))
+		i++;
+	*argc -= i;
+	*argv += i;
+	return (i);
+}
+
+int	echo_command(t_data *data, int argc, char **argv)
+{
+	int	options_count;
+	int	i;
+
+	(void) data;
+	argc--;
+	argv++;
+	options_count = parse_options(&argc, &argv);
+	i = 0;
 	while (i < argc)
 	{
 		printf("%s", argv[i]);
@@ -25,6 +53,7 @@ int	echo_command(t_data *data, int argc, char **argv)
 			printf(" ");
 		i++;
 	}
-	printf("\n");
+	if (!options_count)
+		printf("\n");
 	return (0);
 }

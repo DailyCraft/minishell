@@ -6,13 +6,13 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/10 14:29:24 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/10 15:16:52 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = gcc -Wall -Wextra -Werror -O3 -g
+CC = gcc -Wall -Wextra -Werror -g -fsanitize=address
 
 SRC = envp_utils.c envp.c errors.c main.c tty.c utils.c \
 	commands/cd.c commands/echo.c commands/env.c commands/exit.c commands/export.c commands/pwd.c commands/unset.c \

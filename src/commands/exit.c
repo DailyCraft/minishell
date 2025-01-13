@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 13:06:46 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 08:18:51 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:03:50 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,7 @@ int	exit_command(t_data *data, int argc, char **argv)
 	int		value;
 	int		unclear;
 
-	(void) data;
-	if (argc > 2)
-	{
-		error_msg(data->program, "exit: too many arguments");
-		return (1);
-	}
+	printf("exit\n");
 	if (argc == 1)
 		(free_data(data), exit(data->last_status));
 	trim = ft_strtrim(argv[1], " \t\n\v\f\r");
@@ -31,11 +26,14 @@ int	exit_command(t_data *data, int argc, char **argv)
 	free(trim);
 	if (unclear)
 	{
-		trim = ft_strsjoin((const char *[]){"exit: ", argv[1],
-				": numeric argument required", NULL});
-		error_msg(data->program, trim);
-		free(trim);
+		error_msg(data, "%m: exit: %s: numeric argument required",
+			(char *[]){argv[1]});
 		(free_data(data), exit(2));
+	}
+	if (argc > 2)
+	{
+		error_msg(data, "%m: exit: too many arguments", NULL);
+		return (1);
 	}
 	(free_data(data), exit(value));
 }

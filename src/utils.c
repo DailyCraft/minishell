@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:52:37 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 14:12:50 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 09:46:33 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,19 @@ void	ft_lstsort(t_list *lst, int (*cmp)(void *, void *))
 				temp = temp->next;
 		}
 	}
+}
+
+t_list	*ft_lstdup(t_list *lst)
+{
+	t_list	*dup;
+
+	dup = NULL;
+	while (lst)
+	{
+		ft_lstadd_back(&dup, ft_lstnew(lst->content));
+		lst = lst->next;
+	}
+	return (dup);
 }
 
 char	**strsdup(char **strs)

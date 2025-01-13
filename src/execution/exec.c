@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:50:15 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 14:21:59 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/10 16:02:21 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	setup_redirects(t_data *data, t_command *command)
 	int		output;
 	int		input;
 
-	heredoc = get_heredoc(command);
+	heredoc = get_heredoc(data, command);
 	if (heredoc != NULL)
 	{
 		errno_safe(data, "write", write(0, heredoc, ft_strlen(heredoc)));

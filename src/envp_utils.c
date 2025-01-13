@@ -6,11 +6,25 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 15:25:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/03 10:08:38 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:19:18 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	env_name_valid(char *name)
+{
+	int	valid;
+
+	if (name == NULL)
+		return (0);
+	valid = 1;
+	name = ft_strtrim(name, " \t\n\v\f\r");
+	if (*name == 0)
+		valid = 0;
+	free(name);
+	return (valid);
+}
 
 int	env_cmp(void *content, void *name)
 {
