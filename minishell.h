@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 11:16:37 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/10 22:42:43 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,9 +134,11 @@ void		pwd(t_data *data);
 /// ------------------------------- Parsing ------------------------------- ///
 ///////////////////////////////////////////////////////////////////////////////
 
-t_command	*command_new(char *command_line);
+t_command	*command_new(t_data *data, char *command_line);
+char    	*set_venvps(t_data *data, char *line);
+void		link_argv_line(t_command *command, char *line);
 
-int			is_pipe(char *command_line);
+int			is_pipe(char *line, int index);
 int			find_pipe(char *command_line);
 
 int			is_here_doc(char *command_line);
@@ -144,6 +146,10 @@ int			is_append(char *command_line);
 int			is_input(char *command_line);
 int			is_output(char *command_line);
 int			is_redirection(char *command_line);
+
+int			in_quotes(char *line, int index, char quote);
+int			is_in_quotes(char *line, int index);
+char		*remove_quotes(char *line);
 
 int			set_redirections(t_command *command, char *line);
 
