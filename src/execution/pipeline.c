@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:51:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 14:04:47 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:43:19 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,14 @@ int	execute_pipeline(t_data *data, t_command *command, int input_fd)
 	if (command->pipe)
 		errno_safe(data, "pipe", pipe(fds));
 	pid = fork();
-	if (pid != 0)
-	{
-		if (input_fd != 0)
-			close(input_fd);
-		if (command->pipe)
-		{
-			close(fds[1]);
-			return (execute_pipeline(data, command->pipe, fds[0]));
-		}
-		waitpid(pid, &status, 0);
-		return (status);
-	}
-	return (child_process(data, command, input_fd, fds));
+	if (pid == 0)
+		return (child_process(data, command, input_fd, fds));
+	if (input_fd != 0)
+		close(input_fd);
+	if (!command->pipe)
+		return (waitpid(pid, &status, 0), status);
+	close(fds[1]);
+	status = execute_pipeline(data, command->pipe, fds[0]);
+	waitpid(pid, NULL, 0);
+	return (status);
 }

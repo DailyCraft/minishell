@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/14 16:11:44 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:18:50 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,9 @@
 t_btree	*parse_input(t_data *data, char *input)
 {
 	t_command	*command;
-	t_btree		*btree;
 
 	command = command_new(data, input);
-	if (command->type == COMMAND && command->argc == 0)
-		return (NULL);
 	//print_argv(command);
-	btree = ft_btree_new(command);
-	data->btree = btree;
-	return (btree);
+	data->btree = ft_btree_new(command);
+	return (data->btree);
 }

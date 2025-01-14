@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:43:53 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 13:01:57 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:58:19 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	errno_safe(t_data *data, char *name, int function)
 {
 	if (function < 0)
 	{
-		error_msg(data, "%m: %s %n", (char *[]){name});
+		error_msg(data, "%m: %s: %n", (char *[]){name});
 		exit(1);
 	}
 	return (function);

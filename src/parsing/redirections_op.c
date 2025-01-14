@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_op.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:24:56 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/09 14:18:14 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:24:29 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,22 @@
 
 int	is_here_doc(char *command_line)
 {
-	if (ft_strlen(command_line) < 2)
-		return (0);
-	return (command_line[0] == '<'
-		&& command_line[1] == '<'
-		&& command_line[2] != '<');
+	return (operator_len(command_line, '<') == 2);
 }
 
 int	is_append(char *command_line)
 {
-	if (ft_strlen(command_line) < 2)
-		return (0);
-	return (command_line[0] == '>'
-		&& command_line[1] == '>'
-		&& command_line[2] != '>');
+	return (operator_len(command_line, '>') == 2);
 }
 
 int	is_input(char *command_line)
 {
-	return (command_line[0] == '<' && command_line[1] != '<');
+	return (operator_len(command_line, '<') == 1);
 }
 
 int	is_output(char *command_line)
 {
-	return (command_line[0] == '>' && command_line[1] != '>');
+	return (operator_len(command_line, '>') == 1);
 }
 
 int	is_redirection(char *command_line)

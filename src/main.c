@@ -6,12 +6,13 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 13:07:35 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:31:36 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// TODO: Ctrl+C in ./minishell sub process
 static void	catch_sigint(int sig)
 {
 	(void) sig;
@@ -39,6 +40,7 @@ void	iterate_btree(t_data *data)
 	}
 }
 
+// TODO: add_history() with empty lines
 static void	loop(t_data *data)
 {
 	char	*input;

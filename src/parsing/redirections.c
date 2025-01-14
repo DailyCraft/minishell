@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 10:12:09 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/09 22:15:36 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:39:58 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@ static int	set_redirection_file(t_command *command, char *line, char redirect)
 	ft_memcpy(file + 1, line + i, j);
 	file[j + 1] = 0;
 	node = ft_lstnew(file);
-	if (redirect == HERE_DOC || redirect == INPUT)
-		ft_lstadd_back(&command->inputs, node);
-	else
-		ft_lstadd_back(&command->outputs, node);
+	ft_lstadd_back(&command->redirects, node);
 	return (i + j);
 }
 

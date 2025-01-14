@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:48:39 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 11:23:18 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:48:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	cd_chdir(t_data *data, char *arg)
 	if (arg && ft_strcmp(arg, "-") != 0)
 		free(path);
 	if (must_pwd)
-		pwd(data);
+		pwd();
 	return (0);
 }
 
@@ -96,8 +96,7 @@ int	cd_command(t_data *data, int argc, char **argv)
 	}
 	else if (cd_chdir(data, argv[1]) == 1)
 		return (1);
-	if (ft_getenv(data, "PWD"))
-		ft_setenv(data, "OLDPWD", ft_getenv(data, "PWD"));
+	ft_setenv(data, "OLDPWD", ft_getenv(data, "PWD"));
 	path = getcwd(NULL, 0);
 	ft_setenv(data, "PWD", path);
 	free(path);

@@ -6,97 +6,52 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:48:45 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/13 11:27:32 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:39:19 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	open_output(t_data *data, t_command *command)
+static void	open_fd(int *fd, char *value, int flags)
 {
-	int		fd;
-	t_list	*lst;
-	int		flag;
+	if (*fd != 0)
+		close(*fd);
+	*fd = open(value + 1, flags, 0664);
+}
 
-	fd = 1;
-	lst = command->outputs;
+static int	open_redirect(t_command *command, char *value)
+{
+	if (value[0] == HERE_DOC || value[0] == INPUT)
+		command->last_input = value[0];
+	if (value[0] == HERE_DOC)
+		return (0);
+	if (value[0] == INPUT)
+		open_fd(&command->input_fd, value, O_RDONLY);
+	else if (value[0] == OUTPUT)
+		open_fd(&command->output_fd, value, O_CREAT | O_WRONLY | O_TRUNC);
+	else if (value[0] == APPEND)
+		open_fd(&command->output_fd, value, O_CREAT | O_WRONLY | O_APPEND);
+	if (command->input_fd < 0 || command->output_fd < 0)
+		return (-1);
+	return (0);
+}
+
+int	apply_redirections(t_data *data, t_command *command)
+{
+	t_list	*lst;
+
+	command->last_input = 0;
+	command->input_fd = 0;
+	command->output_fd = 0;
+	lst = command->redirects;
 	while (lst)
 	{
-		if (fd != 1)
-			close(fd);
-		if (((char *) lst->content)[0] == 1)
-			flag = O_TRUNC;
-		else
-			flag = O_APPEND;
-		fd = open(lst->content + 1, O_CREAT | O_WRONLY | flag, 0664);
-		if (fd < 0)
+		if (open_redirect(command, lst->content) == -1)
 		{
-			error_msg(data, "%m: %s", (char *[]){lst->content + 1});
+			error_msg(data, "%m: %s: %n", (char *[]){lst->content + 1});
 			return (-1);
 		}
 		lst = lst->next;
 	}
-	return (fd);
-}
-
-int	open_input(t_data *data, t_command *command)
-{
-	int		fd;
-	t_list	*lst;
-
-	fd = 0;
-	lst = command->inputs;
-	while (lst)
-	{
-		if (((char *) lst->content)[0] == INPUT)
-		{
-			if (fd != 0)
-				close(fd);
-			fd = open(lst->content + 1, O_RDONLY);
-			if (fd < 0)
-			{
-				error_msg(data, "%m: %s", (char *[]){lst->content + 1});
-				return (-1);
-			}
-		}
-		lst = lst->next;
-	}
-	return (fd);
-}
-
-static char	*heredoc(t_data *data, char *limit)
-{
-	char	*result;
-	char	*line;
-
-	result = ft_strdup("");
-	line = ft_readline(data, "> ");
-	while (line && ft_strcmp(line, limit) != 0)
-	{
-		ft_free_set((void **) &result,
-			ft_strsjoin((const char *[]){result, line, "\n", NULL}));
-		free(line);
-		line = ft_readline(data, "> ");
-	}
-	return (result);
-}
-
-char	*get_heredoc(t_data *data, t_command *command)
-{
-	char	*result;
-	t_list	*lst;
-
-	result = NULL;
-	lst = command->inputs;
-	while (lst)
-	{
-		if (((char *) lst->content)[0] == HERE_DOC)
-		{
-			if (result)
-				free(result);
-			result = heredoc(data, lst->content + 1);
-		}
-		lst = lst->next;
-	}
-	return (result);
+	return (0);
 }

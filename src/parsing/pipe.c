@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:43:18 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/10 16:28:18 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:17:49 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 int	is_pipe(char *line, int index)
 {
-	if (line[index] == '|' && line[index + 1] != '|')
-		return (!is_in_quotes(line, index));
-	return (0);
+	return (operator_len(line + index, '|') == 1 && !is_in_quotes(line, index));
 }
 
 int	find_pipe(char *command_line)

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 11:52:26 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:56:41 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,25 +31,29 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	exit(126);
 }
 
+static int	check_path(t_data *data, char *arg, char **path)
+{
+	*path = resolve_path(data, arg);
+	if (*path)
+		return (0);
+	if (errno == ESRCH)
+		return (error_msg(data, "%s: command not found", (char *[]){arg}), 127);
+	if (errno == ENOENT)
+		return (error_msg(data, "%m: %s: %n", (char *[]){arg}), 127);
+	if (errno == EISDIR)
+		return (error_msg(data, "%m: %s: %n", (char *[]){arg}), 126);
+	return (error_msg(data, "%m: %s: %n", (char *[]){arg}), 1);
+}
+
 int	run_external(t_data *data, t_command *command, int in_fork)
 {
 	pid_t	pid;
 	int		status;
 	char	*path;
 
-	path = resolve_path(data, command->argv[0]);
-	if (!path)
-	{
-		if (errno == ESRCH)
-			return (error_msg(data, "%s: command not found",
-					(char *[]){command->argv[0]}), 127);
-		if (errno == ENOENT)
-			return (error_msg(data, "%m: %s: %n",
-					(char *[]){command->argv[0]}), 127);
-		if (errno == EISDIR)
-			return (error_msg(data, "%m: %s: %n",
-					(char *[]){command->argv[0]}), 126);
-	}
+	status = check_path(data, command->argv[0], &path);
+	if (status != 0)
+		return (status);
 	if (in_fork)
 	{
 		pid = fork();
@@ -73,8 +77,6 @@ int	run_sub_shell(t_data *data, char *command_line, int in_fork)
 		if (pid != 0)
 			return (waitpid(pid, &status, 0), status);
 	}
-	(void) data;
-	(void) command_line;
 	ft_btree_clear(&data->btree, clear_command);
 	parse_input(data, command_line);
 	iterate_btree(data);

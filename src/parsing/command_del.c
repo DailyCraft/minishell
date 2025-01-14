@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:02:36 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/09 15:43:08 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:39:38 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,11 @@ t_command	*command_delone(t_command *command)
 	t_command	*pipe;
 
 	pipe = command->pipe;
-	ft_lstclear(&command->inputs, free);
-	ft_lstclear(&command->outputs, free);
-	if (command->type == COMMAND)
-		ft_free_split(command->argv);
-	else
+	ft_lstclear(&command->redirects, free);
+	if (command->type == SUB_SHELL)
 		free(command->command_line);
+	else if (command->argc > 0)
+		ft_free_split(command->argv);
 	free(command);
 	return (pipe);
 }

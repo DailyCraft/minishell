@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 22:42:43 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:21:57 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,11 @@ struct	s_command
 			char	**argv;
 		};	
 	};
-	t_list		*inputs;
-	t_list		*outputs;
+	t_list		*redirects;
+	int			last_input;
+	int			heredoc_fd;
+	int			input_fd;
+	int			output_fd;
 	t_command	*pipe;
 };
 
@@ -111,9 +114,8 @@ int			run_external(t_data *data, t_command *command, int in_fork);
 int			run_sub_shell(t_data *data, char *command_line, int in_fork);
 
 // Redirections
-int			open_output(t_data *data, t_command *command);
-int			open_input(t_data *data, t_command *command);
-char		*get_heredoc(t_data *data, t_command *command);
+int			apply_redirections(t_data *data, t_command *command);
+void		apply_heredocs(t_data *data, t_command *command);
 
 // Utils
 int			isdir(char *path);
@@ -128,19 +130,20 @@ int			export_command(t_data *data, int argc, char **argv);
 int			pwd_command(t_data *data, int argc, char **argv);
 int			unset_command(t_data *data, int argc, char **argv);
 
-void		pwd(t_data *data);
+void		pwd(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// ------------------------------- Parsing ------------------------------- ///
 ///////////////////////////////////////////////////////////////////////////////
 
 t_command	*command_new(t_data *data, char *command_line);
-char    	*set_venvps(t_data *data, char *line);
+char		*set_venvps(t_data *data, char *line);
 void		link_argv_line(t_command *command, char *line);
 
 int			is_pipe(char *line, int index);
 int			find_pipe(char *command_line);
 
+size_t		operator_len(char *line, char c);
 int			is_here_doc(char *command_line);
 int			is_append(char *command_line);
 int			is_input(char *command_line);
