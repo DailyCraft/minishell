@@ -6,7 +6,7 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/14 16:34:35 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/15 12:47:02 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ NAME = minishell
 
 CC = gcc -Wall -Wextra -Werror -g -fsanitize=address
 
-SRC = envp_utils.c envp.c errors.c main.c tty.c utils.c \
-	commands/cd.c commands/echo.c commands/env.c commands/exit.c commands/export.c commands/pwd.c commands/unset.c \
-	execution/exec.c execution/heredoc.c execution/pipeline.c execution/redirect.c execution/runs.c execution/utils.c \
-	parsing/command_del.c parsing/command.c parsing/operator.c parsing/parsing.c parsing/pipe.c \
-	parsing/redirections_op.c parsing/redirections.c parsing/quote.c parsing/dollar_sign.c
+SRC = envp_utils.c envp.c errors.c main.c signals.c tty.c utils.c
+SRC_CMD = cd.c echo.c env.c exit.c export.c pwd.c unset.c
+SRC_EXEC = exec.c heredoc.c pipeline.c redirect.c runs.c utils.c
+SRC_PARSING = command_del.c command.c dollar_sign.c operator.c parsing.c pipe.c quote.c redirections_op.c redirections.c
+SRC += $(SRC_CMD:%=commands/%) $(SRC_EXEC:%=execution/%) $(SRC_PARSING:%=parsing/%)
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)
 

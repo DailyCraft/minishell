@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/14 14:56:41 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:27:24 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,24 @@ int	run_external(t_data *data, t_command *command, int in_fork)
 		if (pid != 0)
 		{
 			free(path);
-			return (waitpid(pid, &status, 0), status);
+			signal(SIGINT, SIG_IGN);
+			return (wait_process(pid));
 		}
+		signals(0);
 	}
 	return (child_external(data, command, path));
 }
 
+// TODO: test '(cat)' followed by 'Ctrl+\'
 int	run_sub_shell(t_data *data, char *command_line, int in_fork)
 {
 	pid_t	pid;
-	int		status;
 
 	if (in_fork)
 	{
 		pid = fork();
 		if (pid != 0)
-			return (waitpid(pid, &status, 0), status);
+			return (wait_process(pid));
 	}
 	ft_btree_clear(&data->btree, clear_command);
 	parse_input(data, command_line);

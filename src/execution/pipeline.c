@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:51:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/14 11:43:19 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:24:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static int	child_process(t_data *data, t_command *command, int input, int *fds)
 	exit(status);
 }
 
+// TODO: './minishell | cat'
 int	execute_pipeline(t_data *data, t_command *command, int input_fd)
 {
 	pid_t	pid;
@@ -47,7 +48,7 @@ int	execute_pipeline(t_data *data, t_command *command, int input_fd)
 	if (input_fd != 0)
 		close(input_fd);
 	if (!command->pipe)
-		return (waitpid(pid, &status, 0), status);
+		return (wait_process(pid));
 	close(fds[1]);
 	status = execute_pipeline(data, command->pipe, fds[0]);
 	waitpid(pid, NULL, 0);

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/14 16:21:57 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:16:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,14 @@ enum	e_type
 	COMMAND
 };
 
+typedef struct s_fds
+{
+	int	last_input;
+	int	heredoc;
+	int	input;
+	int	output;
+}	t_fds;
+
 typedef struct s_command	t_command;
 struct	s_command
 {
@@ -63,10 +71,7 @@ struct	s_command
 		};	
 	};
 	t_list		*redirects;
-	int			last_input;
-	int			heredoc_fd;
-	int			input_fd;
-	int			output_fd;
+	t_fds		fds;
 	t_command	*pipe;
 };
 
@@ -97,9 +102,12 @@ t_list		*ft_lstdup(t_list *lst);
 char		**strsdup(char **strs);
 void		free_data(t_data *data);
 
-void		init_interactive(t_data *data);
+void		print_header(void);
 char		*ft_readline(t_data *data, char *prompt);
 void		free_gnl(void);
+
+void		signals(int enable);
+int			wait_process(pid_t pid);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// ------------------------------ Execution ------------------------------ ///
@@ -115,7 +123,7 @@ int			run_sub_shell(t_data *data, char *command_line, int in_fork);
 
 // Redirections
 int			apply_redirections(t_data *data, t_command *command);
-void		apply_heredocs(t_data *data, t_command *command);
+int			apply_heredocs(t_data *data, t_command *command);
 
 // Utils
 int			isdir(char *path);

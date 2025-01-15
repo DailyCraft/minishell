@@ -6,19 +6,19 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:50:15 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/14 14:49:26 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:29:02 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: 'cat' and 'Ctrl+\'
 int	execute(t_data *data, t_command *command)
 {
 	int	backup_fds[2];
 	int	status;
 
-	apply_heredocs(data, command);
+	if (apply_heredocs(data, command) == -1)
+		return (130);
 	if (!command->pipe)
 	{
 		backup_fds[0] = dup(STDIN_FILENO);
@@ -29,9 +29,7 @@ int	execute(t_data *data, t_command *command)
 		(close(backup_fds[0]), close(backup_fds[1]));
 	}
 	else
-	{
 		status = execute_pipeline(data, command, 0);
-	}
 	data->last_status = status;
 	return (status);
 }
@@ -40,18 +38,18 @@ static int	setup_redirects(t_data *data, t_command *command)
 {
 	if (apply_redirections(data, command) == -1)
 		return (-1);
-	if (command->last_input == HERE_DOC)
-		dup2(command->heredoc_fd, STDIN_FILENO);
-	else if (command->last_input == INPUT)
-		dup2(command->input_fd, STDIN_FILENO);
-	if (command->output_fd != 0)
-		dup2(command->output_fd, STDOUT_FILENO);
-	if (command->input_fd != 0)
-		close(command->input_fd);
-	if (command->heredoc_fd != 0)
-		close(command->heredoc_fd);
-	if (command->output_fd != 0)
-		close(command->output_fd);
+	if (command->fds.last_input == HERE_DOC)
+		dup2(command->fds.heredoc, STDIN_FILENO);
+	else if (command->fds.last_input == INPUT)
+		dup2(command->fds.input, STDIN_FILENO);
+	if (command->fds.output != 0)
+		dup2(command->fds.output, STDOUT_FILENO);
+	if (command->fds.input != 0)
+		close(command->fds.input);
+	if (command->fds.heredoc != 0)
+		close(command->fds.heredoc);
+	if (command->fds.output != 0)
+		close(command->fds.output);
 	return (0);
 }
 

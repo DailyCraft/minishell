@@ -6,21 +6,16 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:12:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 15:59:30 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:40:38 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init_interactive(t_data *data)
+void	print_header(void)
 {
-	struct termios	term;
-
 	if (!isatty(STDIN_FILENO))
 		return ;
-	errno_safe(data, "tcgetattr", tcgetattr(STDIN_FILENO, &term));
-	term.c_cc[VQUIT] = _POSIX_VDISABLE;
-	errno_safe(data, "tcsetattr", tcsetattr(STDIN_FILENO, TCSANOW, &term));
 	printf("\n");
 	printf(" ███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗\n");
 	printf(" ████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║\n");
