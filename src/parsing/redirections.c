@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 10:12:09 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 11:01:02 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:31:08 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static int	set_redirection_file(t_data *data, t_command *command,
 	int		i;
 	int		j;
 	char	*file;
-	t_list	*node;
 
 	i = 0;
 	j = 0;
@@ -33,19 +32,34 @@ static int	set_redirection_file(t_data *data, t_command *command,
 	file[j + 1] = 0;
 	file = set_venvps(data, file);
 	file = remove_extra_c(file);
-	node = ft_lstnew(file);
-	ft_lstadd_back(&command->redirects, node);
+	ft_lstadd_back(&command->redirects, ft_lstnew(file));
 	return (i + j);
+}
+
+static int	get_redirection_op(char *line)
+{
+	if (operator_len(line, '<') == 2)
+		return (HERE_DOC);
+	if (operator_len(line, '>') == 2)
+		return (APPEND);
+	if (operator_len(line, '<') == 1)
+		return (INPUT);
+	if (operator_len(line, '>') == 1)
+		return (OUTPUT);
+	return (0);
+}
+
+int	is_redirection(char *command_line)
+{
+	return (get_redirection_op(command_line) != 0);
 }
 
 int	set_redirections(t_data *data, t_command *command, char *line)
 {
-	if (is_here_doc(line))
-		return (set_redirection_file(data, command, line + 2, HERE_DOC) + 2);
-	else if (is_input(line))
-		return (set_redirection_file(data, command, line + 1, INPUT) + 1);
-	else if (is_output(line))
-		return (set_redirection_file(data, command, line + 1, OUTPUT) + 1);
-	else
-		return (set_redirection_file(data, command, line + 2, APPEND) + 2);
+	int	redirection;
+
+	redirection = get_redirection_op(line);
+	if (redirection == HERE_DOC || redirection == APPEND)
+		return (set_redirection_file(data, command, line + 2, redirection) + 2);
+	return (set_redirection_file(data, command, line + 1, redirection) + 1);
 }

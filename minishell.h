@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 11:02:03 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/16 19:02:55 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include "libft.h"
+
+# define RLP_CL1 "\001\e[1;33m\002"
+# define RLP_CL2 "\001\e[1;34m\002"
+# define RLP_RST "\001\e[0m\002"
 
 # define OUTPUT 1
 # define APPEND 2
@@ -107,7 +111,7 @@ char		*ft_readline(t_data *data, char *prompt);
 void		free_gnl(void);
 
 void		signals(int enable);
-int			wait_process(pid_t pid);
+int			wait_process(pid_t pid, int ignore_sigint);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// ------------------------------ Execution ------------------------------ ///
@@ -131,55 +135,47 @@ char		*resolve_path(t_data *data, char *child);
 
 // Built-in commands
 int			cd_command(t_data *data, int argc, char **argv);
-int			echo_command(t_data *data, int argc, char **argv);
-int			env_command(t_data *data, int argc, char **argv);
+int			echo_command(int argc, char **argv);
+int			env_command(t_data *data);
 int			exit_command(t_data *data, int argc, char **argv);
 int			export_command(t_data *data, int argc, char **argv);
-int			pwd_command(t_data *data, int argc, char **argv);
+int			pwd_command(void);
 int			unset_command(t_data *data, int argc, char **argv);
-
-void		pwd(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 /// ------------------------------- Parsing ------------------------------- ///
 ///////////////////////////////////////////////////////////////////////////////
 
-//command new
+// Command
 t_command	*command_new(t_data *data, char *command_line);
+void		free_command(void *command);
+int			btree_is_empty(t_btree *btree);
 char		*set_venvps(t_data *data, char *line);
 void		link_argv_line(t_command *command, char *line);
 
-//pipe
-int			is_pipe(char *line, int index);
+// Pipe
 int			find_pipe(char *command_line);
 
-//redirection
+// Redirection
 size_t		operator_len(char *line, char c);
-int			is_here_doc(char *command_line);
-int			is_append(char *command_line);
-int			is_input(char *command_line);
-int			is_output(char *command_line);
 int			is_redirection(char *command_line);
 int			set_redirections(t_data *data, t_command *command, char *line);
 
-//backslash
+// Backslash
 int			is_ignored(char *line, int index);
 int			nb_backslash(char *line);
 char		*remove_backslash(char *line);
 
-//utils
+// Utils
 char		*remove_extra_c(char *line);
 
-//quotes
+// Quotes
 int			in_quotes(char *line, int index, char quote);
 int			is_in_quotes(char *line, int index);
 char		*remove_quotes(char *line);
 int			count_quotes(char *line);
 
-//clear
-void		clear_command(void *command);
-
-//parse
+// Parse
 t_btree		*parse_input(t_data *data, char *input);
 
 #endif

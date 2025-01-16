@@ -6,22 +6,21 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:26:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/15 16:30:20 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:57:33 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	g_interrupted = 0;
+static int	g_interrupted;
 
 static int	empty_event(void)
 {
 	return (0);
 }
 
-static void	catch_sigint(int sig)
+static void	catch_sigint(int sig __attribute__((unused)))
 {
-	(void) sig;
 	g_interrupted = 1;
 	rl_done = 1;
 }
@@ -47,9 +46,8 @@ static int	request(t_data *data, char *limit)
 	if (!line)
 	{
 		line = ft_itoa(i);
-		error_msg(data, "%m: %s %s %s (wanted '%s')",
-			(char *[]){"warning: here-document at line", line,
-			"delimited by end-of-file", limit});
+		error_msg(data, "%m: warning: here-document at line %s delimited by "
+			"end-of-file (wanted '%s')", (char *[]){line, limit});
 	}
 	free(line);
 	return (close(fds[1]), fds[0]);
@@ -79,6 +77,7 @@ int	apply_heredocs(t_data *data, t_command *command)
 {
 	t_command	*current;
 
+	g_interrupted = 0;
 	rl_event_hook = empty_event;
 	signal(SIGINT, catch_sigint);
 	current = command;

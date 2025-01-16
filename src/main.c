@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/15 12:46:16 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 18:51:01 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	iterate_btree(t_data *data)
 	}
 }
 
-// TODO: add_history() with empty lines
 static void	loop(t_data *data)
 {
 	char	*input;
@@ -40,12 +39,12 @@ static void	loop(t_data *data)
 	while (input)
 	{
 		btree = parse_input(data, input);
-		if (btree && isatty(STDIN_FILENO))
+		if (isatty(STDIN_FILENO) && !btree_is_empty(btree))
 			add_history(input);
 		free(input);
 		if (btree)
 			iterate_btree(data);
-		ft_btree_clear(&data->btree, clear_command);
+		ft_btree_clear(&data->btree, free_command);
 		input = ft_readline(data, NULL);
 	}
 	if (isatty(STDIN_FILENO))
@@ -53,12 +52,11 @@ static void	loop(t_data *data)
 	printf("exit\n");
 }
 
-int	main(int argc, char **argv, char **envp)
+int	main(int argc __attribute__((unused)), char **argv, char **envp)
 {
 	t_data	data;
 	int		last_status;
 
-	(void) argc;
 	data.program = argv[0];
 	data.last_status = 0;
 	data.envp = NULL;

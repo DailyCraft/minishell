@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:48:39 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/14 11:48:14 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:07:29 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	cd_chdir(t_data *data, char *arg)
 	if (arg && ft_strcmp(arg, "-") != 0)
 		free(path);
 	if (must_pwd)
-		pwd();
+		pwd_command();
 	return (0);
 }
 

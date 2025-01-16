@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:43:53 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 13:58:19 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 18:56:01 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	error_msg(t_data *data, char *format, char **args)
 	percent = ft_strchr(format, '%');
 	while (percent)
 	{
-		write(2, format, percent - format);
+		errno_safe(data, "write", write(2, format, percent - format));
 		format = percent + 2;
 		if (percent[1] == 'm')
 			print_minishell(data);

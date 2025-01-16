@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_sign.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/14 16:09:01 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:00:41 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*join_and_free(char *line, char *to_join)
+static char	*join_and_free(char *line, char *to_join)
 {
 	char	*new;
 
@@ -22,16 +22,13 @@ char	*join_and_free(char *line, char *to_join)
 	return (new);
 }
 
-char	*envp(t_data *data, char *venvp)
+static char	*envp(t_data *data, char *venvp)
 {
 	char	*new;
 
-	if (ft_getenv(data, venvp))
-		new = ft_strdup(ft_getenv(data, venvp));
-	else
-		new = ft_strdup("");
+	new = ft_or(ft_getenv(data, venvp), "");
 	free(venvp);
-	return (new);
+	return (ft_strdup(new));
 }
 
 char	*set_venvps(t_data *data, char *line)
@@ -48,7 +45,7 @@ char	*set_venvps(t_data *data, char *line)
 	while (line[i])
 	{
 		if (line[i] == '$' && !in_quotes(line, i, '\'')
-			&& ft_isalnum(line[i +1]))
+			&& ft_isalnum(line[i + 1]))
 		{
 			new_line = join_and_free(new_line, ft_substr(line, k, i - k));
 			i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 10:59:40 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/16 14:28:23 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	set_command(t_data *data, t_command *command, char *line)
 	int	i;
 
 	i = 0;
-	command->argc = 0;
 	while (line[i])
 	{
 		if (is_redirection(line + i))

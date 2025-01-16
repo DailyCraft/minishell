@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:50:15 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/15 16:29:02 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 17:05:25 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ int	execute(t_data *data, t_command *command)
 		(close(backup_fds[0]), close(backup_fds[1]));
 	}
 	else
+	{
+		signal(SIGINT, SIG_IGN);
 		status = execute_pipeline(data, command, 0);
+		signals(1);
+	}
 	data->last_status = status;
 	return (status);
 }
@@ -64,15 +68,15 @@ int	run_command(t_data *data, t_command *command, int in_fork)
 	if (ft_strcmp(command->argv[0], "cd") == 0)
 		return (cd_command(data, command->argc, command->argv));
 	else if (ft_strcmp(command->argv[0], "echo") == 0)
-		return (echo_command(data, command->argc, command->argv));
+		return (echo_command(command->argc, command->argv));
 	else if (ft_strcmp(command->argv[0], "env") == 0)
-		return (env_command(data, command->argc, command->argv));
+		return (env_command(data));
 	else if (ft_strcmp(command->argv[0], "exit") == 0)
 		return (exit_command(data, command->argc, command->argv));
 	else if (ft_strcmp(command->argv[0], "export") == 0)
 		return (export_command(data, command->argc, command->argv));
 	else if (ft_strcmp(command->argv[0], "pwd") == 0)
-		return (pwd_command(data, command->argc, command->argv));
+		return (pwd_command());
 	else if (ft_strcmp(command->argv[0], "unset") == 0)
 		return (unset_command(data, command->argc, command->argv));
 	return (run_external(data, command, in_fork));

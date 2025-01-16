@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 11:29:29 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 08:01:51 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:06:28 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,11 @@ static int	parse_options(int *argc, char ***argv)
 	return (i);
 }
 
-int	echo_command(t_data *data, int argc, char **argv)
+int	echo_command(int argc, char **argv)
 {
 	int	options_count;
 	int	i;
 
-	(void) data;
 	argc--;
 	argv++;
 	options_count = parse_options(&argc, &argv);
