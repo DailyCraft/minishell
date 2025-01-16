@@ -6,7 +6,7 @@
 /*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/14 15:55:03 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/16 10:59:40 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,13 @@ void	link_argv_line(t_command *command, char *line)
 	command->argv[command->argc] = NULL;
 }
 
-void	link_last_argv(t_command *command)
+char	*remove_extra_c(char *line)
 {
-	char	**old_argv;
-	int		i;
-
-	old_argv = command->argv;
-	command->argv = malloc(command->argc * sizeof(char *));
-	i = 0;
-	command->argc--;
-	while (i < command->argc - 1)
-	{
-		command->argv[i] = old_argv[i];
-		i++;
-	}
-	command->argv[i] = ft_strjoin(old_argv[i], old_argv[i + 1]);
-	command->argv[command->argc] = NULL;
-	free(old_argv[i]);
-	free(old_argv[i + 1]);
-	free(old_argv);
+	if (nb_backslash(line))
+		line = remove_backslash(line);
+	if (count_quotes(line))
+		line = remove_quotes(line);
+	return (line);
 }
 
 static int	set_argv(t_data *data, t_command *command, char *line)
@@ -61,11 +49,12 @@ static int	set_argv(t_data *data, t_command *command, char *line)
 	int		i;
 
 	i = 0;
-	while (line[i] && (line[i] != ' ' || is_in_quotes(line, i)))
+	while (line[i] && (line[i] != ' '
+			|| is_in_quotes(line, i) || is_ignored(line, i)))
 		i++;
 	line_argv = ft_substr(line, 0, i);
 	line_argv = set_venvps(data, line_argv);
-	line_argv = remove_quotes(line_argv);
+	line_argv = remove_extra_c(line_argv);
 	link_argv_line(command, line_argv);
 	return (i);
 }
@@ -79,7 +68,7 @@ void	set_command(t_data *data, t_command *command, char *line)
 	while (line[i])
 	{
 		if (is_redirection(line + i))
-			i += set_redirections(command, line + i);
+			i += set_redirections(data, command, line + i);
 		else if (line[i] != ' ')
 			i += set_argv(data, command, line + i);
 		else

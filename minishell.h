@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/15 16:16:14 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/16 11:02:03 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,28 +144,42 @@ void		pwd(void);
 /// ------------------------------- Parsing ------------------------------- ///
 ///////////////////////////////////////////////////////////////////////////////
 
+//command new
 t_command	*command_new(t_data *data, char *command_line);
 char		*set_venvps(t_data *data, char *line);
 void		link_argv_line(t_command *command, char *line);
 
+//pipe
 int			is_pipe(char *line, int index);
 int			find_pipe(char *command_line);
 
+//redirection
 size_t		operator_len(char *line, char c);
 int			is_here_doc(char *command_line);
 int			is_append(char *command_line);
 int			is_input(char *command_line);
 int			is_output(char *command_line);
 int			is_redirection(char *command_line);
+int			set_redirections(t_data *data, t_command *command, char *line);
 
+//backslash
+int			is_ignored(char *line, int index);
+int			nb_backslash(char *line);
+char		*remove_backslash(char *line);
+
+//utils
+char		*remove_extra_c(char *line);
+
+//quotes
 int			in_quotes(char *line, int index, char quote);
 int			is_in_quotes(char *line, int index);
 char		*remove_quotes(char *line);
+int			count_quotes(char *line);
 
-int			set_redirections(t_command *command, char *line);
-
+//clear
 void		clear_command(void *command);
 
+//parse
 t_btree		*parse_input(t_data *data, char *input);
 
 #endif
