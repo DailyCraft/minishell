@@ -6,7 +6,7 @@
 /*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:50:19 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/14 16:10:04 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:37:51 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	in_quotes(char *line, int index, char to_find)
 	quote = 0;
 	while (line[i] && i < (index + 1))
 	{
-		if ((line[i] == '"' || line[i] == '\'') && quote == 0)
+		if ((line[i] == '"'|| line[i] == '\'') && quote == 0)
 			quote = line[i];
 		else if (line[i] == quote)
 			quote = 0;

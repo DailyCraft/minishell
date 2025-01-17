@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:43:18 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 15:02:07 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:43:21 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_pipe(char *line, int index)
+int	is_pipe(char *line, int index)
 {
 	return (operator_len(line + index, '|') == 1 && !is_in_quotes(line, index));
 }

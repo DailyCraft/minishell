@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 10:12:09 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 16:31:08 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:47:42 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,16 @@ static int	set_redirection_file(t_data *data, t_command *command,
 	file[0] = redirect;
 	ft_memcpy(file + 1, line + i, j);
 	file[j + 1] = 0;
-	file = set_venvps(data, file);
-	file = remove_extra_c(file);
+	if (redirect != HERE_DOC)
+	{
+		file = set_venvps(data, file);
+		file = remove_extra_c(file);
+	}
 	ft_lstadd_back(&command->redirects, ft_lstnew(file));
 	return (i + j);
 }
 
-static int	get_redirection_op(char *line)
+int	get_redirection_op(char *line)
 {
 	if (operator_len(line, '<') == 2)
 		return (HERE_DOC);

@@ -3,21 +3,21 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
+#    By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/16 18:54:26 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/17 13:09:18 by cgrasser         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = gcc -Wall -Wextra -Werror -O3 -g -fsanitize=address
+CC = gcc -Wall -Wextra -Werror -g -O3 -fsanitize=address
 
 SRC = envp_utils.c envp.c errors.c main.c signals.c tty.c utils.c
 SRC_CMD = cd.c echo.c env.c exit.c export.c pwd.c unset.c
 SRC_EXEC = exec.c heredoc.c pipeline.c redirect.c runs.c utils.c
-SRC_PARSING = backslash.c command_utils.c command.c dollar_sign.c operator.c parsing.c pipe.c quote.c redirections.c
+SRC_PARSING = backslash.c command_utils.c command.c dollar_sign.c operator.c parsing.c pipe.c quote.c redirections.c error_command.c
 SRC += $(SRC_CMD:%=commands/%) $(SRC_EXEC:%=execution/%) $(SRC_PARSING:%=parsing/%)
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:26:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 20:57:33 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:26:24 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	catch_sigint(int sig __attribute__((unused)))
 	g_interrupted = 1;
 	rl_done = 1;
 }
-
+ // TODO: quotes
 static int	request(t_data *data, char *limit)
 {
 	int		fds[2];

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 19:02:55 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:45:10 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,17 +147,19 @@ int			unset_command(t_data *data, int argc, char **argv);
 ///////////////////////////////////////////////////////////////////////////////
 
 // Command
-t_command	*command_new(t_data *data, char *command_line);
+int			command_new(t_data *data, t_command **command, char *command_line);
 void		free_command(void *command);
 int			btree_is_empty(t_btree *btree);
 char		*set_venvps(t_data *data, char *line);
 void		link_argv_line(t_command *command, char *line);
 
 // Pipe
+int			is_pipe(char *line, int index);
 int			find_pipe(char *command_line);
 
 // Redirection
 size_t		operator_len(char *line, char c);
+int			get_redirection_op(char *line);
 int			is_redirection(char *command_line);
 int			set_redirections(t_data *data, t_command *command, char *line);
 
@@ -169,6 +171,9 @@ char		*remove_backslash(char *line);
 // Utils
 char		*remove_extra_c(char *line);
 
+// Logical
+int			is_logical(char *line);
+
 // Quotes
 int			in_quotes(char *line, int index, char quote);
 int			is_in_quotes(char *line, int index);
@@ -177,5 +182,10 @@ int			count_quotes(char *line);
 
 // Parse
 t_btree		*parse_input(t_data *data, char *input);
+
+// Error
+int			error_file(t_data *data, char *file);
+int			error_syntax(t_data *data, char *line);
+int			error_cmd(t_data *data, char *line);
 
 #endif
