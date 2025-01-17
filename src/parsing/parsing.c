@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 09:23:43 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:28:07 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,13 @@
 // 	}
 // }
 
-t_btree	*parse_input(t_data *data, char *input)
+void	parse_btree(t_data *data, char *input)
 {
-	t_command	*command;
-
-	if (command_new(data, &command, input) == -1)
+	if (error_cmd(data, input))
 	{
-		data->last_status = 1;
-		return (NULL);
+		data->last_status = 2;
+		data->btree = NULL;
 	}
-	data->btree = ft_btree_new(command);
-	return (data->btree);
+	else
+		data->btree = ft_btree_new(ft_strdup(input));
 }

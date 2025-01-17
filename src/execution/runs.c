@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 20:33:09 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:04:25 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	envp = flat_envp(data);
 	argv = strsdup(command->argv);
 	program = data->program;
-	free_data(data);
+	free_data(data, command);
 	execve(path, argv, envp);
 	error_msg(NULL, "%s: %s: %n", (char *[]){program, path});
 	free(path);
@@ -69,7 +69,7 @@ int	run_external(t_data *data, t_command *command, int in_fork)
 
 // TODO: test '(cat)' followed by 'Ctrl+\'
 // TODO: test signals
-int	run_sub_shell(t_data *data, char *command_line, int in_fork)
+int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 {
 	pid_t	pid;
 
@@ -79,9 +79,9 @@ int	run_sub_shell(t_data *data, char *command_line, int in_fork)
 		if (pid != 0)
 			return (wait_process(pid, 1));
 	}
-	ft_btree_clear(&data->btree, free_command);
-	parse_input(data, command_line);
+	ft_btree_clear(&data->btree, free);
+	parse_btree(data, command->command_line);
 	iterate_btree(data);
-	free_data(data);
+	free_data(data, command);
 	exit(0);
 }

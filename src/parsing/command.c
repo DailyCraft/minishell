@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 10:06:24 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:50:44 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,8 @@ void	link_argv_line(t_command *command, char *line)
 
 char	*remove_extra_c(char *line)
 {
-	if (nb_backslash(line))
-		line = remove_backslash(line);
-	if (count_quotes(line))
-		line = remove_quotes(line);
+	line = remove_backslash(line);
+	line = remove_quotes(line);
 	return (line);
 }
 
@@ -67,9 +65,7 @@ int	set_command(t_data *data, t_command *command, char *line)
 	while (line[i])
 	{
 		if (is_redirection(line + i))
-		{
 			i += set_redirections(data, command, line + i);
-		}
 		else if (line[i] != ' ')
 			i += set_argv(data, command, line + i);
 		else
@@ -78,21 +74,19 @@ int	set_command(t_data *data, t_command *command, char *line)
 	return (0);
 }
 
-int	command_new(t_data *data, t_command **command, char *command_line)
+t_command	*parse_command(t_data *data, char *command_line)
 {
+	t_command	*command;
 	char		*line;
 	int			i;
 
-	if (error_cmd(data, command_line))
-		return (-1);
-	*command = ft_calloc(1, sizeof(t_command));
-	(*command)->type = COMMAND;
+	command = ft_calloc(1, sizeof(t_command));
+	command->type = COMMAND;
 	i = find_pipe(command_line);
 	line = ft_substr(command_line, 0, i);
-	set_command(data, *command, line);
+	set_command(data, command, line);
 	free(line);
-	if (command_line[i] == '|'
-		&& command_new(data, &(*command)->pipe, command_line + i + 1) == -1)
-		return (-1);
-	return (0);
+	if (command_line[i] == '|')
+		command->pipe = parse_command(data, command_line + i + 1);
+	return (command);
 }

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:02:36 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 14:48:56 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:00:10 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,12 @@ void	free_command(void *command)
 	}
 }
 
-int	btree_is_empty(t_btree *btree)
+int	is_empty_command_line(char *command_line)
 {
-	t_command	*command;
+	size_t	i;
 
-	if (!btree)
-		return (1);
-	if (btree->left || btree->right)
-		return (0);
-	command = btree->content;
-	return (command->type == COMMAND && command->argc == 0
-		&& command->pipe == NULL && command->redirects == NULL);
+	i = 0;
+	while (ft_isspace(command_line[i]))
+		i++;
+	return (command_line[i] == 0);
 }

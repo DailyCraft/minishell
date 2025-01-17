@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 15:00:41 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:25:09 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,44 +22,45 @@ static char	*join_and_free(char *line, char *to_join)
 	return (new);
 }
 
-static char	*envp(t_data *data, char *venvp)
+static int	envp(t_data *data, char *line, char **new_line)
 {
-	char	*new;
+	int		i;
+	char	*env;
 
-	new = ft_or(ft_getenv(data, venvp), "");
-	free(venvp);
-	return (ft_strdup(new));
+	i = 0;
+	while (ft_isalnum(line[i]))
+		i++;
+	env = ft_substr(line, 0, i);
+	env = ft_free_set((void **) &env, ft_or(ft_getenv(data, env), ""));
+	*new_line = join_and_free(*new_line, ft_strdup(env));
+	return (i);
 }
 
 char	*set_venvps(t_data *data, char *line)
 {
-	char	*new_line;
-	char	*venvp;
+	char	*new;
 	int		i;
-	int		j;
-	int		k;
+	int		last_envp;
 
+	new = ft_strdup("");
 	i = 0;
-	k = 0;
-	new_line = ft_calloc(1, 1);
+	last_envp = 0;
 	while (line[i])
 	{
-		if (line[i] == '$' && !in_quotes(line, i, '\'')
-			&& ft_isalnum(line[i + 1]))
+		if (ft_strncmp(line + i, "$?", 2) == 0 && !in_quotes(line, i, '\''))
 		{
-			new_line = join_and_free(new_line, ft_substr(line, k, i - k));
+			new = join_and_free(new, ft_itoa(data->last_status));
 			i++;
-			j = 0;
-			while (ft_isalnum(line[i + j]))
-				j++;
-			venvp = ft_substr(line, i, j);
-			new_line = join_and_free(new_line, envp(data, venvp));
-			i += j;
-			k = i;
+			last_envp = i + 1;
 		}
-		else
-			i++;
+		else if (line[i] == '$' && !in_quotes(line, i, '\''))
+		{
+			new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
+			i += envp(data, line + i + 1, &new);
+			last_envp = i + 1;
+		}
+		i++;
 	}
-	new_line = join_and_free(new_line, ft_substr(line, k, i));
-	return (free(line), new_line);
+	new = join_and_free(new, ft_substr(line, last_envp, i));
+	return (free(line), new);
 }

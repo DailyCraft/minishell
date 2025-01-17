@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:26:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 11:26:24 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:43:58 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static void	catch_sigint(int sig __attribute__((unused)))
 	g_interrupted = 1;
 	rl_done = 1;
 }
- // TODO: quotes
-static int	request(t_data *data, char *limit)
+
+static int	request(t_data *data, char *limit, int interpret)
 {
 	int		fds[2];
 	char	*line;
@@ -38,7 +38,8 @@ static int	request(t_data *data, char *limit)
 	{
 		if (g_interrupted)
 			return (free(line), close(fds[0]), close(fds[1]), -1);
-		line = set_venvps(data, line);
+		if (interpret)
+			line = set_venvps(data, line);
 		ft_putendl_fd(line, fds[1]);
 		ft_free_set((void **) &line, ft_readline(data, "> "));
 		i++;
@@ -56,6 +57,7 @@ static int	request(t_data *data, char *limit)
 static int	get_heredoc(t_data *data, t_command *command)
 {
 	t_list	*lst;
+	int		interpret;
 
 	lst = command->redirects;
 	while (lst)
@@ -64,7 +66,10 @@ static int	get_heredoc(t_data *data, t_command *command)
 		{
 			if (command->fds.heredoc != 0)
 				close(command->fds.heredoc);
-			command->fds.heredoc = request(data, lst->content + 1);
+			interpret = count_quotes(lst->content + 1) == 0
+				&& nb_backslash(lst->content + 1) == 0;
+			lst->content = remove_extra_c(lst->content);
+			command->fds.heredoc = request(data, lst->content + 1, interpret);
 			if (command->fds.heredoc == -1)
 				return (-1);
 		}

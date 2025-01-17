@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 11:45:10 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:03:01 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char		*ft_basename(char *path);
 void		ft_lstsort(t_list *lst, int (*cmp)(void *, void *));
 t_list		*ft_lstdup(t_list *lst);
 char		**strsdup(char **strs);
-void		free_data(t_data *data);
+void		free_data(t_data *data, t_command *command);
 
 void		print_header(void);
 char		*ft_readline(t_data *data, char *prompt);
@@ -123,7 +123,7 @@ int			execute(t_data *data, t_command *command);
 int			execute_pipeline(t_data *data, t_command *command, int input_fd);
 int			run_command(t_data *data, t_command *command, int in_fork);
 int			run_external(t_data *data, t_command *command, int in_fork);
-int			run_sub_shell(t_data *data, char *command_line, int in_fork);
+int			run_sub_shell(t_data *data, t_command *command, int in_fork);
 
 // Redirections
 int			apply_redirections(t_data *data, t_command *command);
@@ -137,7 +137,8 @@ char		*resolve_path(t_data *data, char *child);
 int			cd_command(t_data *data, int argc, char **argv);
 int			echo_command(int argc, char **argv);
 int			env_command(t_data *data);
-int			exit_command(t_data *data, int argc, char **argv);
+int			exit_command(t_data *data, t_command *command,
+				int argc, char **argv);
 int			export_command(t_data *data, int argc, char **argv);
 int			pwd_command(void);
 int			unset_command(t_data *data, int argc, char **argv);
@@ -147,9 +148,9 @@ int			unset_command(t_data *data, int argc, char **argv);
 ///////////////////////////////////////////////////////////////////////////////
 
 // Command
-int			command_new(t_data *data, t_command **command, char *command_line);
+t_command	*parse_command(t_data *data, char *command_line);
 void		free_command(void *command);
-int			btree_is_empty(t_btree *btree);
+int			is_empty_command_line(char *command_line);
 char		*set_venvps(t_data *data, char *line);
 void		link_argv_line(t_command *command, char *line);
 
@@ -181,7 +182,7 @@ char		*remove_quotes(char *line);
 int			count_quotes(char *line);
 
 // Parse
-t_btree		*parse_input(t_data *data, char *input);
+void		parse_btree(t_data *data, char *input);
 
 // Error
 int			error_file(t_data *data, char *file);

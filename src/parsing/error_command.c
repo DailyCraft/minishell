@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 07:28:12 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 13:08:08 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:50:54 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	error_file(t_data *data, char *line)
 	int		redirection;
 	int		i;
 	int		j;
-	
+
 	redirection = get_redirection_op(line);
 	if (redirection == 0)
 		return (0);
@@ -79,9 +79,10 @@ int	error_syntax(t_data *data, char *line)
 	return (0);
 }
 
+// TODO: error message with ' | |'
 int	error_cmd(t_data *data, char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (line[i])
