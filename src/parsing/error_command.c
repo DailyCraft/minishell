@@ -6,7 +6,7 @@
 /*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 07:28:12 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/18 14:48:26 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/18 17:55:23 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int	error_cmd(t_data *data, char *line)
 	int	i;
 
 	i = 0;
+	if (count_quotes(line) % 2 == 1)
+		return (error_msg(data, "%m: syntax error : unclosed quotes", NULL), 1);
 	while (line[i])
 	{
 		if (error_syntax(data, line + i))
