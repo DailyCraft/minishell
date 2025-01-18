@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 15:50:44 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/18 16:06:57 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// void	print_argv(t_command *command)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (command->argv[i])
+// 	{
+// 		printf("argv %d = %s\n",i , command->argv[i]);
+// 		i++;
+// 	}
+// }
 
 void	link_argv_line(t_command *command, char *line)
 {
@@ -52,6 +64,8 @@ static int	set_argv(t_data *data, t_command *command, char *line)
 		i++;
 	line_argv = ft_substr(line, 0, i);
 	line_argv = set_venvps(data, line_argv);
+	if (have_wildcards(line_argv))
+		return (wildcards(command, line_argv), i);
 	line_argv = remove_extra_c(line_argv);
 	link_argv_line(command, line_argv);
 	return (i);

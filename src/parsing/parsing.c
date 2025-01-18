@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 16:28:07 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/18 15:58:42 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void	print_argv(t_command *command)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (command->argv[i])
-// 	{
-// 		printf("argv %d = %s\n",i , command->argv[i]);
-// 		i++;
-// 	}
-// }
 
 void	parse_btree(t_data *data, char *input)
 {
@@ -30,7 +18,7 @@ void	parse_btree(t_data *data, char *input)
 	{
 		data->last_status = 2;
 		data->btree = NULL;
+		return ;
 	}
-	else
-		data->btree = ft_btree_new(ft_strdup(input));
+	data->btree = ft_btree_new(ft_strdup(input));
 }

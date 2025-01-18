@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 16:03:01 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/18 15:30:01 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ char		*remove_backslash(char *line);
 char		*remove_extra_c(char *line);
 
 // Logical
-int			is_logical(char *line);
+int			is_logical(char *line, int index);
 
 // Quotes
 int			in_quotes(char *line, int index, char quote);
@@ -188,5 +188,9 @@ void		parse_btree(t_data *data, char *input);
 int			error_file(t_data *data, char *file);
 int			error_syntax(t_data *data, char *line);
 int			error_cmd(t_data *data, char *line);
+
+// Wildcards
+int			have_wildcards(char *line);
+void		wildcards(t_command *command, char *wildcards);
 
 #endif

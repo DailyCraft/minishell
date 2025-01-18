@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 07:28:12 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 15:50:54 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/18 14:48:26 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	error_file_syntax(t_data *data, char *line)
 		return (unexpected_token(data, "<"));
 	if (operator_len(line, '<') == 2 && !is_in_quotes(line, 0))
 		return (unexpected_token(data, "<<"));
-	if (operator_len(line, '&') == 1 && !is_in_quotes(line, 0))
-		return (unexpected_token(data, "&"));
 	if (operator_len(line, '&') == 2 && !is_in_quotes(line, 0))
 		return (unexpected_token(data, "&&"));
 	if (operator_len(line, '|') == 2 && !is_in_quotes(line, 0))
@@ -55,7 +53,7 @@ int	error_file(t_data *data, char *line)
 	i = 0;
 	while (file[i] && ft_isspace(file[i]))
 		i++;
-	if (is_redirection(file + i) || is_logical(file + i) || is_pipe(file, i))
+	if (is_redirection(file + i) || is_logical(file, i) || is_pipe(file, i))
 		return (error_file_syntax(data, file + i));
 	j = 0;
 	while (file[i + j] && (!ft_isspace(file[i + j])
