@@ -6,7 +6,7 @@
 /*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/18 15:30:01 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/19 13:21:53 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ char		*remove_extra_c(char *line);
 
 // Logical
 int			is_logical(char *line, int index);
+int			find_logical(char *line);
 
 // Quotes
 int			in_quotes(char *line, int index, char quote);

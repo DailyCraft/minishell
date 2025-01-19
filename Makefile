@@ -6,13 +6,13 @@
 #    By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/18 15:35:32 by cgrasser         ###   ########.fr        #
+#    Updated: 2025/01/19 13:53:55 by cgrasser         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = gcc -Wall -Wextra -Werror -g #-O3 -fsanitize=address
+CC = gcc -Wall -Wextra -Werror -g -O3 -fsanitize=address
 
 SRC = envp_utils.c envp.c errors.c main.c signals.c tty.c utils.c
 SRC_CMD = cd.c echo.c env.c exit.c export.c pwd.c unset.c
