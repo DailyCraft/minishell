@@ -6,13 +6,13 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:50:19 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 09:52:37 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:48:46 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_quote(char *line, int index)
+bool	is_quote(char *line, int index)
 {
 	if (line[index] == '\'')
 		return (true);

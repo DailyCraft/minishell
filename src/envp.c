@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 10:45:10 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 10:34:08 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:06:43 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,21 @@
 
 void	init_envp(t_data *data, char **envp)
 {
+	char	*lvl;
+
 	while (*envp)
 	{
 		ft_setenv_parse(data, *envp);
 		envp++;
 	}
+	if (ft_getenv(data, "SHLVL"))
+	{
+		lvl = ft_itoa(ft_atoi(ft_getenv(data, "SHLVL")) + 1);
+		ft_setenv(data, "SHLVL", lvl);
+		free(lvl);
+	}
+	else
+		ft_setenv(data, "SHLVL", "1");
 }
 
 char	*ft_getenv(t_data *data, char *name)

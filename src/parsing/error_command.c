@@ -6,13 +6,13 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 07:28:12 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 10:31:25 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 15:17:10 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	unexpected_token(t_data *data, char *token)
+bool	unexpected_token(t_data *data, char *token)
 {
 	error_msg(data, "%m: syntax error near unexpected token `%s'",
 		(char *[]){token});
@@ -92,9 +92,15 @@ bool	error_cmd(t_data *data, char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (error_syntax(data, line + i) || error_file(data, line + i))
+		if (error_syntax(data, line + i) || error_file(data, line + i)
+			|| subshell_errors(data, line, i))
 			return (true);
 		i++;
+	}
+	if (subshell_level(line, i) > 0)
+	{
+		error_msg(data, "%m: syntax error: unclosed parenthesis", NULL);
+		return (true);
 	}
 	return (false);
 }

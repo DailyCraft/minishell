@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 13:09:41 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:44:01 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static int	set_argv(t_data *data, t_command *command, char *line)
 	return (i);
 }
 
-// TODO: (((( cd srger || (cd src) ))))
 void	set_command(t_data *data, t_command *command, char *line)
 {
 	int	i;

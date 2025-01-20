@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 12:03:26 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:28:39 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,46 @@ static t_btree	*set_btree(char *input)
 
 void	parse_btree(t_data *data, char *input)
 {
-	if (error_cmd(data, input))
+	t_list	*tokens;
+	
+
+	tokens = tokenize(input);
+	/* if (check_unexpected(tokens))
 	{
 		data->last_status = 2;
 		data->btree = NULL;
 		return ;
-	}
+	} */
+
 	data->btree = set_btree(input);
+}
+
+t_command	*parse_command(t_list *tokens)
+{
+	t_command	*command;
+
+	command = ft_calloc(1, sizeof(t_command));
+	command->type = SUBSHELL;
+	while (tokens)
+	{
+		if (((t_token *) tokens->content)->type == SUBSHELL)
+		{
+			// TODO
+		}
+		else if (((t_token *) tokens->content)->type == REDIRECT)
+		{
+			//ft_lstadd_back(command->redirects, ft_lstnew(((t_token *) tokens->content)->value) + tokens->next->content)
+		}
+		else if (((t_token *) tokens->content)->type == ARG)
+		{
+			ft_lstadd_back(command->args, ft_lstnew(((t_token *) tokens->content)->value));
+		}
+		else if (((t_token *) tokens->content)->type == PIPE)
+		{
+			command->pipe = parse_command(tokens->next);
+			break ;
+		}
+		tokens = tokens->next;
+	}
+	
 }

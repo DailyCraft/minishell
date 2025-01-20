@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 12:16:30 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:19:31 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,22 @@
 # define APPEND 2
 # define INPUT 3
 # define HERE_DOC 4
+
+enum	e_token
+{
+	ARG,
+	PIPE,
+	LOGICAL,
+	SUBSHELL,
+	REDIRECT
+};
+
+typedef struct s_token
+{
+	int		type;
+	char	*value;
+}	t_token;
+
 
 typedef struct s_data
 {
@@ -173,6 +189,7 @@ bool		is_logical(char *line, int index);
 int			find_logical(char *line);
 
 // Quotes
+bool		is_quote(char *line, int index);
 bool		in_quotes(char *line, int index, char quote);
 bool		is_in_quotes(char *line, int index);
 char		*remove_quotes(char *line);
@@ -182,6 +199,7 @@ int			count_quotes(char *line);
 void		parse_btree(t_data *data, char *input);
 
 // Error
+bool		unexpected_token(t_data *data, char *token);
 bool		error_file(t_data *data, char *file);
 bool		error_syntax(t_data *data, char *line);
 bool		error_cmd(t_data *data, char *line);
@@ -191,7 +209,11 @@ bool		have_wildcards(char *line);
 void		wildcards(t_command *command, char *wildcards);
 
 // Subshell
-int			subshell_level(char *line, int index);
+int			subshell_level(char *line, size_t index);
 int			set_subshell(t_command *command, char *line);
+bool 		subshell_errors(t_data *data, char *line, int index);
+
+// Token
+t_list		*tokenize(char *line);
 
 #endif

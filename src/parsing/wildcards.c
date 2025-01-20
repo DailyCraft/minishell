@@ -6,16 +6,11 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:13:28 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 11:22:53 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:17:17 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	is_wildcards(char *line, int index)
-{
-	return (operator_len(line + index, '*') == 1 && !is_in_quotes(line, index));
-}
 
 bool	have_wildcards(char *line)
 {
@@ -24,35 +19,37 @@ bool	have_wildcards(char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (is_wildcards(line, i))
+		if (line[i] == '*' && !is_in_quotes(line, i))
 			return (true);
 		i++;
 	}
 	return (false);
 }
 
-static int	cmp_wildcards(char *file, char *to_cmp)
+static int	cmp_wildcards(char *file, char *arg)
 {
 	int	i;
 	int	j;
 
 	i = 0;
 	j = 0;
-	while (to_cmp[i])
+	while (arg[i])
 	{
-		if (to_cmp[i] == '*' && is_wildcards(to_cmp, i))
+		if (is_quote(arg, i))
 		{
-			while (file[j] && file[j] != to_cmp[i + 1])
+		}
+		else if (arg[i] == '*' && !is_in_quotes(arg, i))
+		{
+			if (j == 0 && file[j] == '.')
+				return (0);
+			while (file[j] && file[j] != arg[i + 1])
 				j++;
-			i++;
 		}
-		else if (to_cmp[i] == file[j])
-		{
-			i++;
+		else if (arg[i] == file[j])
 			j++;
-		}
 		else
 			return (0);
+		i++;
 	}
 	return (file[j] == '\0');
 }
@@ -77,7 +74,6 @@ static int	file_cmp(char *s1, char *s2)
 		- (unsigned char) ft_tolower(s2[i]));
 }
 
-// TODO: .*
 void	wildcards(t_command *command, char *wildcards)
 {
 	DIR				*dir;
@@ -89,7 +85,7 @@ void	wildcards(t_command *command, char *wildcards)
 	files = NULL;
 	while (entry)
 	{
-		if (entry->d_name[0] != '.' && cmp_wildcards(entry->d_name, wildcards))
+		if (cmp_wildcards(entry->d_name, wildcards))
 			ft_lstadd_back(&files, ft_lstnew(ft_strdup(entry->d_name)));
 		entry = readdir(dir);
 	}
@@ -97,6 +93,6 @@ void	wildcards(t_command *command, char *wildcards)
 	if (files)
 		ft_lstsort(files, (int (*)(void *, void *)) file_cmp);
 	else
-		files = ft_lstnew(wildcards);
+		files = ft_lstnew(remove_extra_c(wildcards));
 	ft_lstadd_back(&command->args, files);
 }
