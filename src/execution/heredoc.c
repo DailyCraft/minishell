@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:26:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 13:43:58 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:01:57 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	request(t_data *data, char *limit, int interpret)
 	return (close(fds[1]), fds[0]);
 }
 
-static int	get_heredoc(t_data *data, t_command *command)
+static bool	get_heredoc(t_data *data, t_command *command)
 {
 	t_list	*lst;
 	int		interpret;
@@ -71,14 +71,14 @@ static int	get_heredoc(t_data *data, t_command *command)
 			lst->content = remove_extra_c(lst->content);
 			command->fds.heredoc = request(data, lst->content + 1, interpret);
 			if (command->fds.heredoc == -1)
-				return (-1);
+				return (false);
 		}
 		lst = lst->next;
 	}
-	return (1);
+	return (true);
 }
 
-int	apply_heredocs(t_data *data, t_command *command)
+bool	apply_heredocs(t_data *data, t_command *command)
 {
 	t_command	*current;
 
@@ -89,15 +89,15 @@ int	apply_heredocs(t_data *data, t_command *command)
 	while (current)
 	{
 		current->fds.heredoc = 0;
-		if (get_heredoc(data, current) == -1)
+		if (!get_heredoc(data, current))
 		{
 			rl_event_hook = NULL;
 			signals(1);
-			return (-1);
+			return (false);
 		}
 		current = current->pipe;
 	}
 	rl_event_hook = NULL;
 	signals(1);
-	return (0);
+	return (true);
 }

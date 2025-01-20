@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:52:37 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 15:59:30 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 08:42:35 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,21 @@ t_list	*ft_lstdup(t_list *lst)
 	return (dup);
 }
 
-char	**strsdup(char **strs)
+/**
+ * Convert a list to an array.
+ * 'conv' must malloc a new value.
+ */
+char	**ft_lsttoa(t_list *lst, char *(*conv)(void *))
 {
 	char	**result;
 	size_t	i;
 
+	result = malloc((ft_lstsize(lst) + 1) * sizeof(char *));
 	i = 0;
-	while (strs[i])
-		i++;
-	result = malloc((i + 1) * sizeof(char *));
-	i = 0;
-	while (strs[i])
+	while (lst)
 	{
-		result[i] = ft_strdup(strs[i]);
-		i++;
+		result[i++] = conv(lst->content);
+		lst = lst->next;
 	}
 	result[i] = NULL;
 	return (result);

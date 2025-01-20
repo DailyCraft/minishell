@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:43:38 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/15 07:47:59 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:03:29 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static void	open_fd(int *fd, char *value, int flags)
 	*fd = open(value + 1, flags, 0664);
 }
 
-static int	open_redirect(t_command *command, char *value)
+static bool	open_redirect(t_command *command, char *value)
 {
 	if (value[0] == HERE_DOC || value[0] == INPUT)
 		command->fds.last_input = value[0];
 	if (value[0] == HERE_DOC)
-		return (0);
+		return (true);
 	if (value[0] == INPUT)
 		open_fd(&command->fds.input, value, O_RDONLY);
 	else if (value[0] == OUTPUT)
@@ -32,11 +32,11 @@ static int	open_redirect(t_command *command, char *value)
 	else if (value[0] == APPEND)
 		open_fd(&command->fds.output, value, O_CREAT | O_WRONLY | O_APPEND);
 	if (command->fds.input < 0 || command->fds.output < 0)
-		return (-1);
-	return (0);
+		return (false);
+	return (true);
 }
 
-int	apply_redirections(t_data *data, t_command *command)
+bool	apply_redirections(t_data *data, t_command *command)
 {
 	t_list	*lst;
 
@@ -46,12 +46,12 @@ int	apply_redirections(t_data *data, t_command *command)
 	lst = command->redirects;
 	while (lst)
 	{
-		if (open_redirect(command, lst->content) == -1)
+		if (!open_redirect(command, lst->content))
 		{
 			error_msg(data, "%m: %s: %n", (char *[]){lst->content + 1});
-			return (-1);
+			return (false);
 		}
 		lst = lst->next;
 	}
-	return (0);
+	return (true);
 }

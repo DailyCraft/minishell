@@ -6,19 +6,18 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:50:15 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 16:03:16 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:26:43 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: 'cat Makefile | rhegerug' return incorrect exit status
 int	execute(t_data *data, t_command *command)
 {
 	int	backup_fds[2];
 	int	status;
 
-	if (apply_heredocs(data, command) == -1)
+	if (!apply_heredocs(data, command))
 		return (130);
 	if (!command->pipe)
 	{
@@ -35,15 +34,15 @@ int	execute(t_data *data, t_command *command)
 		status = execute_pipeline(data, command, 0);
 		signals(1);
 	}
-	if (command->type == COMMAND && command->argc == 0 && !command->redirects)
+	if (command->type != COMMAND || command->args || command->redirects)
 		data->last_status = status;
 	return (status);
 }
 
-static int	setup_redirects(t_data *data, t_command *command)
+static bool	setup_redirects(t_data *data, t_command *command)
 {
-	if (apply_redirections(data, command) == -1)
-		return (-1);
+	if (!apply_redirections(data, command))
+		return (false);
 	if (command->fds.last_input == HERE_DOC)
 		dup2(command->fds.heredoc, STDIN_FILENO);
 	else if (command->fds.last_input == INPUT)
@@ -56,30 +55,30 @@ static int	setup_redirects(t_data *data, t_command *command)
 		close(command->fds.heredoc);
 	if (command->fds.output != 0)
 		close(command->fds.output);
-	return (0);
+	return (true);
 }
 
 int	run_command(t_data *data, t_command *command, int in_fork)
 {
-	if (setup_redirects(data, command) == -1)
-		return (1);
-	if (command->argc == 0)
-		return (0);
+	if (!setup_redirects(data, command))
+		return (EXIT_FAILURE);
+	if (command->args == NULL)
+		return (EXIT_SUCCESS);
 	if (command->type == SUB_SHELL)
 		return (run_sub_shell(data, command, in_fork));
-	if (ft_strcmp(command->argv[0], "cd") == 0)
-		return (cd_command(data, command->argc, command->argv));
-	else if (ft_strcmp(command->argv[0], "echo") == 0)
-		return (echo_command(command->argc, command->argv));
-	else if (ft_strcmp(command->argv[0], "env") == 0)
+	if (ft_strcmp(command->args->content, "cd") == 0)
+		return (cd_command(data, command->args));
+	else if (ft_strcmp(command->args->content, "echo") == 0)
+		return (echo_command(command->args));
+	else if (ft_strcmp(command->args->content, "env") == 0)
 		return (env_command(data));
-	else if (ft_strcmp(command->argv[0], "exit") == 0)
-		return (exit_command(data, command, command->argc, command->argv));
-	else if (ft_strcmp(command->argv[0], "export") == 0)
-		return (export_command(data, command->argc, command->argv));
-	else if (ft_strcmp(command->argv[0], "pwd") == 0)
+	else if (ft_strcmp(command->args->content, "exit") == 0)
+		return (exit_command(data, command, command->args));
+	else if (ft_strcmp(command->args->content, "export") == 0)
+		return (export_command(data, command->args));
+	else if (ft_strcmp(command->args->content, "pwd") == 0)
 		return (pwd_command());
-	else if (ft_strcmp(command->argv[0], "unset") == 0)
-		return (unset_command(data, command->argc, command->argv));
+	else if (ft_strcmp(command->args->content, "unset") == 0)
+		return (unset_command(data, command->args));
 	return (run_external(data, command, in_fork));
 }

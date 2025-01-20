@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 12:41:00 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 19:01:37 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:22:57 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	signals(int enable)
 
 int	wait_process(pid_t pid, int ignore_sigint)
 {
-	int	status;
+	int		status;
+	char	*quit_msg;
 
 	if (ignore_sigint)
 		signal(SIGINT, SIG_IGN);
@@ -46,9 +47,15 @@ int	wait_process(pid_t pid, int ignore_sigint)
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGQUIT)
-			error_msg(NULL, "Quit (core dumped)", NULL);
+		{
+			if (WCOREDUMP(status))
+				quit_msg = "Quit (core dumped)";
+			else
+				quit_msg = "Quit";
+			error_msg(NULL, quit_msg, NULL);
+		}
 		else
 			ft_putchar_fd('\n', 1);
 	}
-	return (status);
+	return (WEXITSTATUS(status));
 }

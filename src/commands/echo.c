@@ -6,53 +6,51 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 11:29:29 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 15:06:28 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:57:41 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_n(char *arg)
+static bool	is_n(char *arg)
 {
 	int	i;
 
 	if (arg[0] != '-')
-		return (0);
+		return (false);
 	i = 1;
 	while (arg[i] == 'n')
 		i++;
 	return (i > 1 && arg[i] == 0);
 }
 
-static int	parse_options(int *argc, char ***argv)
+static int	parse_options(t_list **args)
 {
 	int	i;
 
 	i = 0;
-	while (i < *argc && is_n((*argv)[i]))
+	while (*args && is_n((*args)->content))
+	{
+		*args = (*args)->next;
 		i++;
-	*argc -= i;
-	*argv += i;
+	}
 	return (i);
 }
 
-int	echo_command(int argc, char **argv)
+int	echo_command(t_list *args)
 {
-	int	options_count;
-	int	i;
+	int		options_count;
 
-	argc--;
-	argv++;
-	options_count = parse_options(&argc, &argv);
-	i = 0;
-	while (i < argc)
+	args = args->next;
+	options_count = parse_options(&args);
+	while (args)
 	{
-		printf("%s", argv[i]);
-		if (i != argc - 1)
+		printf("%s", (char *) args->content);
+		if (args->next)
 			printf(" ");
-		i++;
+		args = args->next;
 	}
 	if (!options_count)
 		printf("\n");
-	return (0);
+	return (EXIT_SUCCESS);
 }

@@ -6,13 +6,13 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 13:47:24 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/10 14:28:39 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:04:28 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	isdir(char *path)
+bool	isdir(char *path)
 {
 	struct stat	statbuf;
 

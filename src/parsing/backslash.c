@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   backslash.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 17:36:49 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/16 10:57:13 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:39:23 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_ignored(char *line, int index)
+bool	is_ignored(char *line, int index)
 {
-	if (index == 0)
-		return (0);
+	if (index == 0 || in_quotes(line, index, '\''))
+		return (false);
 	return (line[index - 1] == '\\');
 }
 
@@ -35,6 +35,8 @@ int	nb_backslash(char *line)
 	return (b_count);
 }
 
+// TODO: echo "salut\' salut"
+// TODO: echo 'salut \' ''
 char	*remove_backslash(char *line)
 {
 	int		i;

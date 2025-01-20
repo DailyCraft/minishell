@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 10:12:09 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 11:47:42 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:55:06 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	get_redirection_op(char *line)
 	return (0);
 }
 
-int	is_redirection(char *command_line)
+bool	is_redirection(char *command_line)
 {
 	return (get_redirection_op(command_line) != 0);
 }

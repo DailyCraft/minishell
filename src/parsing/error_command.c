@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   error_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 07:28:12 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/18 17:55:23 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:31:25 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	unexpected_token(t_data *data, char *token)
+static bool	unexpected_token(t_data *data, char *token)
 {
 	error_msg(data, "%m: syntax error near unexpected token `%s'",
 		(char *[]){token});
-	return (1);
+	return (true);
 }
 
-int	error_file_syntax(t_data *data, char *line)
+bool	error_file_syntax(t_data *data, char *line)
 {
 	if (operator_len(line, '|') == 1 && !is_in_quotes(line, 0))
 		return (unexpected_token(data, "|"));
@@ -35,10 +35,10 @@ int	error_file_syntax(t_data *data, char *line)
 		return (unexpected_token(data, "&&"));
 	if (operator_len(line, '|') == 2 && !is_in_quotes(line, 0))
 		return (unexpected_token(data, "||"));
-	return (0);
+	return (false);
 }
 
-int	error_file(t_data *data, char *line)
+bool	error_file(t_data *data, char *line)
 {
 	char	*file;
 	int		redirection;
@@ -47,7 +47,7 @@ int	error_file(t_data *data, char *line)
 
 	redirection = get_redirection_op(line);
 	if (redirection == 0)
-		return (0);
+		return (false);
 	file = line + 1 + (redirection == HERE_DOC || redirection == APPEND);
 	redirection = 0;
 	i = 0;
@@ -61,10 +61,10 @@ int	error_file(t_data *data, char *line)
 		j++;
 	if (j == 0)
 		return (unexpected_token(data, "newline"));
-	return (0);
+	return (false);
 }
 
-int	error_syntax(t_data *data, char *line)
+bool	error_syntax(t_data *data, char *line)
 {
 	if (operator_len(line, '|') > 2 && !is_in_quotes(line, 0))
 		return (unexpected_token(data, "||"));
@@ -74,24 +74,27 @@ int	error_syntax(t_data *data, char *line)
 		return (unexpected_token(data, "<<"));
 	if (operator_len(line, '&') > 2 && !is_in_quotes(line, 0))
 		return (unexpected_token(data, "&&"));
-	return (0);
+	return (false);
 }
 
 // TODO: error message with ' | |'
-int	error_cmd(t_data *data, char *line)
+// TODO: error message with ' echo '" '
+// TODO: '&&' and line end by '&&'
+bool	error_cmd(t_data *data, char *line)
 {
 	int	i;
 
-	i = 0;
 	if (count_quotes(line) % 2 == 1)
-		return (error_msg(data, "%m: syntax error : unclosed quotes", NULL), 1);
+	{
+		error_msg(data, "%m: syntax error: unclosed quotes", NULL);
+		return (true);
+	}
+	i = 0;
 	while (line[i])
 	{
-		if (error_syntax(data, line + i))
-			return (1);
-		if (error_file(data, line + i))
-			return (1);
+		if (error_syntax(data, line + i) || error_file(data, line + i))
+			return (true);
 		i++;
 	}
-	return (0);
+	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:48:39 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 15:07:29 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:37:27 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*from_env(t_data *data, char *env, char *error)
 	return (ft_getenv(data, env));
 }
 
-static int	cd_chdir(t_data *data, char *arg)
+static bool	cd_chdir(t_data *data, char *arg)
 {
 	char	*path;
 	int		must_pwd;
@@ -70,35 +70,35 @@ static int	cd_chdir(t_data *data, char *arg)
 	else
 		must_pwd = resolve_cdpath(data, arg, &path);
 	if (!path)
-		return (1);
+		return (false);
 	if (path[0] != 0 && chdir(path) == -1)
 	{
 		error_msg(data, "%m: cd: %s: %n", (char *[]){path});
 		if (arg && ft_strcmp(arg, "-") != 0)
 			free(path);
-		return (1);
+		return (false);
 	}
 	if (arg && ft_strcmp(arg, "-") != 0)
 		free(path);
 	if (must_pwd)
 		pwd_command();
-	return (0);
+	return (true);
 }
 
-int	cd_command(t_data *data, int argc, char **argv)
+int	cd_command(t_data *data, t_list *args)
 {
 	char	*path;
 
-	if (argc > 2)
+	if (ft_lstsize(args) > 2)
 	{
 		error_msg(data, "%m: cd: too many arguments", NULL);
-		return (1);
+		return (EXIT_FAILURE);
 	}
-	else if (cd_chdir(data, argv[1]) == 1)
-		return (1);
+	else if (!cd_chdir(data, ft_lstgeti(args, 1)->content))
+		return (EXIT_FAILURE);
 	ft_setenv(data, "OLDPWD", ft_getenv(data, "PWD"));
 	path = getcwd(NULL, 0);
 	ft_setenv(data, "PWD", path);
 	free(path);
-	return (0);
+	return (EXIT_SUCCESS);
 }

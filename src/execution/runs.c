@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 16:04:25 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 08:44:17 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	char	**argv;
 	char	*program;
 
-	envp = flat_envp(data);
-	argv = strsdup(command->argv);
+	envp = ft_lsttoa(data->envp, flat_envp);
+	argv = ft_lsttoa(command->args, (char *(*)(void *)) ft_strdup);
 	program = data->program;
 	free_data(data, command);
 	execve(path, argv, envp);
@@ -51,7 +51,7 @@ int	run_external(t_data *data, t_command *command, int in_fork)
 	int		status;
 	char	*path;
 
-	status = check_path(data, command->argv[0], &path);
+	status = check_path(data, command->args->content, &path);
 	if (status != 0)
 		return (status);
 	if (in_fork)

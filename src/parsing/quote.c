@@ -6,13 +6,22 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:50:19 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 13:12:09 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 09:52:37 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	in_quotes(char *line, int index, char to_find)
+static bool	is_quote(char *line, int index)
+{
+	if (line[index] == '\'')
+		return (true);
+	if (line[index] == '"' && (index == 0 || line[index - 1] != '\\'))
+		return (true);
+	return (false);
+}
+
+bool	in_quotes(char *line, int index, char to_find)
 {
 	char	quote;
 	int		i;
@@ -21,7 +30,7 @@ int	in_quotes(char *line, int index, char to_find)
 	quote = 0;
 	while (line[i] && i < (index + 1))
 	{
-		if ((line[i] == '"' || line[i] == '\'') && quote == 0)
+		if (is_quote(line, i) && quote == 0)
 			quote = line[i];
 		else if (line[i] == quote)
 			quote = 0;
@@ -34,7 +43,7 @@ int	in_quotes(char *line, int index, char to_find)
 	return (line[i] == quote && line[i] == to_find);
 }
 
-int	is_in_quotes(char *line, int index)
+bool	is_in_quotes(char *line, int index)
 {
 	return (in_quotes(line, index, '\'') || in_quotes(line, index, '"'));
 }
@@ -48,7 +57,7 @@ int	count_quotes(char *line)
 	c_quotes = 0;
 	while (line[i])
 	{
-		if ((line[i] == '\'' || line[i] == '"') && !is_in_quotes(line, i))
+		if (is_quote(line, i) && !is_in_quotes(line, i))
 			c_quotes++;
 		i++;
 	}
@@ -70,7 +79,7 @@ char	*remove_quotes(char *line)
 	j = 0;
 	while (line[i])
 	{
-		if ((line[i] == '\'' || line[i] == '"') && !is_in_quotes(line, i))
+		if (is_quote(line, i) && !is_in_quotes(line, i))
 			i++;
 		else
 			new[j++] = line[i++];

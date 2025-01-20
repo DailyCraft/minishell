@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 10:45:10 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/13 11:58:44 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:34:08 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ char	*ft_getenv(t_data *data, char *name)
 		return (NULL);
 }
 
-int	ft_setenv(t_data *data, char *name, char *value)
+bool	ft_setenv(t_data *data, char *name, char *value)
 {
 	char	**content;
 
 	if (!env_name_valid(name))
-		return (-1);
+		return (false);
 	ft_unsetenv(data, name);
 	content = malloc(2 * sizeof(char *));
 	content[0] = ft_strdup(name);
@@ -46,14 +46,14 @@ int	ft_setenv(t_data *data, char *name, char *value)
 	else
 		content[1] = NULL;
 	ft_lstadd_back(&data->envp, ft_lstnew(content));
-	return (0);
+	return (true);
 }
 
-int	ft_setenv_parse(t_data *data, char *env)
+bool	ft_setenv_parse(t_data *data, char *env)
 {
 	int		sep;
 	char	*name;
-	int		result;
+	bool	result;
 
 	sep = ft_strchr(env, '=') - env;
 	if (sep < 0)
@@ -68,14 +68,14 @@ int	ft_setenv_parse(t_data *data, char *env)
 	return (result);
 }
 
-int	ft_unsetenv(t_data *data, char *name)
+bool	ft_unsetenv(t_data *data, char *name)
 {
 	int	i;
 
 	if (!env_name_valid(name))
-		return (-1);
+		return (false);
 	i = ft_lstindex(data->envp, name, env_cmp);
 	if (i != -1)
 		ft_lstdeli(&data->envp, i, free_env);
-	return (0);
+	return (true);
 }

@@ -3,29 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/19 13:52:49 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:03:26 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void print_btree(t_btree *btree)
-// {
-// 	printf("base content = %s\n", (char *)btree->content);
-// 	if (btree->left)
-// 		printf("left content = %s\n", (char *)btree->left->content);
-// 	else
-// 		printf("left = %s\n", (char *)btree->left);
-// 	if (btree->right)
-// 		printf("right content = %s\n", (char *)btree->right->content);
-// 	else
-// 		printf("right = %s\n", (char *)btree->right);
-// }
-
-t_btree	*set_btree(char *input)
+static t_btree	*set_btree(char *input)
 {
 	t_btree	*btree;
 	char	*command;

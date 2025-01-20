@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/17 16:00:48 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:03:39 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	iterate_btree(t_data *data)
 		if (execute(data, command) == 0)
 			btree = btree->left;
 		else
+		{
 			btree = or;
+			or = NULL;
+		}
 		free_command(command);
 	}
 }
@@ -50,8 +53,10 @@ static void	loop(t_data *data)
 		input = ft_readline(data, NULL);
 	}
 	if (isatty(STDIN_FILENO))
+	{
 		rl_clear_history();
-	printf("exit\n");
+		printf("exit\n");
+	}
 }
 
 int	main(int argc __attribute__((unused)), char **argv, char **envp)
