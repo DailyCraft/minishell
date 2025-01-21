@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 11:13:44 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 15:42:24 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:40:46 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	subshell_level(char *line, size_t index)
 	return (level);
 }
 
-int	set_subshell(t_command *command, char *line)
+/* int	set_subshell(t_command *command, char *line)
 {
 	size_t	i;
 
@@ -40,7 +40,7 @@ int	set_subshell(t_command *command, char *line)
 		i++;
 	command->command_line = ft_substr(line, 1, i - 1);
 	return (i + 1);
-}
+} */
 
 bool subshell_errors(t_data *data, char *line, int index)
 {

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:46:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 16:19:00 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 09:18:54 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	add_arg(char *line, t_list **lst)
 	in_quotes = 0;
 	while (line[i] && (!ft_isspace(line[i]) || in_quotes))
 	{
-		if (in_quotes)
+		if (!in_quotes)
 		{
 			if (ft_strncmp(line + i, "&&", 2) == 0)
 				break ;
@@ -67,7 +67,6 @@ t_list	*tokenize(char *line)
 {
 	t_list	*lst;
 	size_t	i;
-	int		len;
 	int		added;
 
 	lst = NULL;
@@ -76,6 +75,8 @@ t_list	*tokenize(char *line)
 	{
 		while (ft_isspace(line[i]))
 			i++;
+		if (!line[i])
+			break ;
 		added = 0;
 		added = add_operator(line, i, '&', 2, &lst, LOGICAL);
 		if (added == 0)
@@ -96,10 +97,14 @@ t_list	*tokenize(char *line)
 			ft_lstadd_back(&lst, token_new(SUBSHELL, ft_strdup(")")));
 			added = 1;
 		}
-		if (added == 0 && !ft_isspace(line[i]) && !is_redirection(line + i) && !is_pipe(line, i) && !is_logical(line, i))
+		if (added == 0 && !is_redirection(line + i) && !is_pipe(line, i) && !is_logical(line, i))
 		{
 			added = add_arg(line + i, &lst);
 		}
-		i++;
+		if (added > 0)
+			i += added;
+		else
+			i++;
 	}
+	return (lst);
 }

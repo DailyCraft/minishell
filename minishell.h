@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 16:19:31 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:39:20 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,14 @@
 # define INPUT 3
 # define HERE_DOC 4
 
+typedef struct s_data
+{
+	char	*program;
+	t_list	*envp;
+	int		last_status;
+	t_btree	*btree;
+}	t_data;
+
 enum	e_token
 {
 	ARG,
@@ -51,18 +59,9 @@ enum	e_token
 
 typedef struct s_token
 {
-	int		type;
-	char	*value;
+	enum e_token	type;
+	char			*value;
 }	t_token;
-
-
-typedef struct s_data
-{
-	char	*program;
-	t_list	*envp;
-	int		last_status;
-	t_btree	*btree;
-}	t_data;
 
 enum	e_type
 {
@@ -84,8 +83,8 @@ struct	s_command
 	enum e_type	type;
 	union
 	{
-		char	*command_line;
-		t_list	*args;	
+		t_list	*args;
+		t_list	*tokens;
 	};
 	t_list		*redirects;
 	t_fds		fds;
@@ -160,7 +159,7 @@ int			unset_command(t_data *data, t_list *args);
 ///////////////////////////////////////////////////////////////////////////////
 
 // Command
-t_command	*parse_command(t_data *data, char *command_line);
+//t_command	*parse_command(t_data *data, char *command_line);
 void		free_command(void *command);
 bool		is_empty_command_line(char *command_line);
 char		*set_venvps(t_data *data, char *line);
@@ -215,5 +214,9 @@ bool 		subshell_errors(t_data *data, char *line, int index);
 
 // Token
 t_list		*tokenize(char *line);
+
+t_btree	*new_btree(t_list *tokens);
+void	free_token(void *token);
+t_command	*parse_command(t_list *tokens);
 
 #endif

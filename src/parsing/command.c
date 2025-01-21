@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:15:55 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 13:44:01 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:38:23 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*remove_extra_c(char *line)
 	return (line);
 }
 
-static int	set_argv(t_data *data, t_command *command, char *line)
+/* static int	set_argv(t_data *data, t_command *command, char *line)
 {
 	char	*line_argv;
 	int		i;
@@ -43,9 +43,9 @@ static int	set_argv(t_data *data, t_command *command, char *line)
 	line_argv = remove_extra_c(line_argv);
 	link_argv_line(command, line_argv);
 	return (i);
-}
+} */
 
-void	set_command(t_data *data, t_command *command, char *line)
+/* void	set_command(t_data *data, t_command *command, char *line)
 {
 	int	i;
 
@@ -61,9 +61,9 @@ void	set_command(t_data *data, t_command *command, char *line)
 		else
 			i++;
 	}
-}
+} */
 
-t_command	*parse_command(t_data *data, char *command_line)
+/* t_command	*parse_command(t_data *data, char *command_line)
 {
 	t_command	*command;
 	char		*line;
@@ -78,4 +78,4 @@ t_command	*parse_command(t_data *data, char *command_line)
 	if (command_line[i] == '|')
 		command->pipe = parse_command(data, command_line + i + 1);
 	return (command);
-}
+} */
