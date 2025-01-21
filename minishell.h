@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 11:44:41 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:19:15 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,10 @@ int			unset_command(t_data *data, t_list *args);
 ///////////////////////////////////////////////////////////////////////////////
 
 // Command
-//t_command	*parse_command(t_data *data, char *command_line);
+/*t_command	*parse_command(t_data *data, char *command_line);
 void		free_command(void *command);
 bool		is_empty_command_line(char *command_line);
 char		*set_venvps(t_data *data, char *line);
-void		link_argv_line(t_command *command, char *line);
 
 // Pipe
 bool		is_pipe(char *line, int index);
@@ -212,16 +211,31 @@ void		wildcards(t_command *command, char *wildcards);
 // Subshell
 int			subshell_level(char *line, size_t index);
 int			set_subshell(t_command *command, char *line);
-bool 		subshell_errors(t_data *data, char *line, int index);
+bool 		subshell_errors(t_data *data, char *line, int index);*/
 
 // Token
 t_list		*tokenize(char *line);
-
-t_btree	*new_btree(t_list *tokens);
-void	free_token(void *token);
+t_btree		*new_btree(t_list *tokens);
+void		free_token(void *token);
+void		free_token_list(void *tokens);
+void		*dup_token(void *token);
 t_command	*parse_command(t_list *tokens);
 
-// New_subshell
-int		subshell_level_lst(t_list *lst);
+void		free_command(void *command);
+bool		is_empty_command_line(char *command_line);
+void		parse_btree(t_data *data, char *input);
+char		*set_venvps(t_data *data, char *line);
+int			count_quotes(char *line);
+int			nb_backslash(char *line);
+char		*remove_extra_c(char *line);
+bool		in_quotes(char *line, int index, char quote);
+bool		is_in_quotes(char *line, int index);
+char		*remove_backslash(char *line);
+char		*remove_quotes(char *line);
+bool		is_quote(char *line, int index);
+size_t		operator_len(char *line, char c);
+t_list		**get_close_subshell(t_list *tokens);
+int			subshell_level(t_list *lst);
+bool		check_unexpected(t_data *data, t_list *lst);
 
 #endif

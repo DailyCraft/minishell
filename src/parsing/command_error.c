@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:27:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/21 12:03:59 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:05:11 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@ void	unexpected_token(t_data *data, char *token)
 		(char *[]){token});
 }
 
+// TODO: echo 1 && (echo 2)
 bool	check_valid_type(t_data *data, t_list *lst)
 {
 	t_token	*token;
 
 	if (!lst->next)
 	{
-		token = (t_token *)lst->content;
+		token = lst->content;
 		if (token->type == REDIRECT)
 			return (unexpected_token(data, "newline"), false);
 		else
@@ -32,7 +33,7 @@ bool	check_valid_type(t_data *data, t_list *lst)
 	}
 	else
 	{
-		token = (t_token *)lst->next->content;
+		token = lst->next->content;
 		if (token->type != ARG)
 			return (unexpected_token(data, token->value), false);
 	}
@@ -66,7 +67,7 @@ bool	check_subshell_lvl(t_data *data, t_list *lst)
 {
 	int	level;
 
-	level = subshell_level_lst(lst);
+	level = subshell_level(lst);
 	if (level > 0)
 	{
 		error_msg(data, "%m: syntax error: unclosed parenthesis", NULL);
@@ -82,13 +83,13 @@ bool	check_unexpected(t_data *data, t_list *lst)
 	t_token	*token;
 
 	if (!check_subshell_lvl(data, lst))
-		return (false);
+		return (true);
 	while (lst)
 	{
 		token = (t_token *)lst->content;
-		if (token->type != ARG && token->type != SUBSHELL)
-			if (!check_valid_type(data, lst))
-				return (true);
+		// if (token->type != ARG && token->type != SUBSHELL)
+		// 	if (!check_valid_type(data, lst))
+		// 		return (true);
 		if (token->type == SUBSHELL)
 			if (!check_valid_subshell(data, lst, token))
 				return (true);

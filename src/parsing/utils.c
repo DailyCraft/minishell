@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/08 17:43:18 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 12:17:32 by dvan-hum         ###   ########.fr       */
+/*   Created: 2025/01/21 10:00:22 by dvan-hum          #+#    #+#             */
+/*   Updated: 2025/01/21 12:18:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_pipe(char *line, int index)
+void	free_token(void *token)
 {
-	return (operator_len(line + index, '|') == 1 && !is_in_quotes(line, index));
+	free(((t_token *) token)->value);
+	free(token);
 }
 
-int	find_pipe(char *line)
+void	free_token_list(void *tokens)
 {
-	int	i;
+	ft_lstclear((t_list **) &tokens, free_token);
+}
 
-	i = 0;
-	while (line[i] && (!is_pipe(line, i) || subshell_level(line, i) > 0))
-		i++;
-	return (i);
+void	*dup_token(void *token)
+{
+	t_token	*dup;
+
+	dup = ft_memdup(token, sizeof(t_token));
+	dup->value = ft_strdup(dup->value);
+	return (dup);
+}
+
+char	*remove_extra_c(char *line)
+{
+	line = remove_quotes(line);
+	line = remove_backslash(line);
+	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 08:54:28 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:14:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	loop(t_data *data)
 		free(input);
 		if (data->btree)
 			iterate_btree(data);
-		ft_btree_clear(&data->btree, NULL);
+		ft_btree_clear(&data->btree, free_token_list);
 		input = ft_readline(data, NULL);
 	}
 	if (isatty(STDIN_FILENO))

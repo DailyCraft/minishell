@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:46:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 09:18:54 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:31:18 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,54 +22,79 @@ static t_list	*token_new(int type, char *value)
 	return (ft_lstnew(token));
 }
 
-static int	add_operator(char *line, int i, char operator, int min, t_list **lst, int type)
+static int	add_operator(char *line, char operator, t_list **tokens, int type)
 {
+	int	min;
 	int	len;
 
-	len = operator_len(line + i, operator);
+	min = 1 + (type == LOGICAL);
+	len = operator_len(line, operator);
 	if (len >= min)
-		ft_lstadd_back(lst, token_new(type, ft_substr(line, i, len)));
+		ft_lstadd_back(tokens, token_new(type, ft_substr(line, 0, len)));
 	if (len < min)
 		return (0);
 	return (len);
 }
 
-static int	add_arg(char *line, t_list **lst)
+static int	add_arg(char *line, t_list **tokens)
 {
 	size_t	i;
 	int		in_quotes;
 
 	i = 0;
 	in_quotes = 0;
-	while (line[i] && (!ft_isspace(line[i]) || in_quotes))
+	while (line[i] && (!ft_isspace(line[i]) || (i > 0 && line[i - 1] == '\\')
+			|| in_quotes))
 	{
 		if (!in_quotes)
 		{
-			if (ft_strncmp(line + i, "&&", 2) == 0)
-				break ;
-			if (line[i] == '|' || line[i] == '>' || line[i] == '<')
-				break ;
-			if (line[i] == '(' || line[i] == ')')
+			if (ft_strncmp(line + i, "&&", 2) == 0
+				|| line[i] == '|' || line[i] == '>' || line[i] == '<'
+				|| line[i] == '(' || line[i] == ')')
 				break ;
 		}
 		if (line[i] == '"' && (in_quotes == 0 || in_quotes == 2))
-			in_quotes = (in_quotes == 2 ? 0 : 2);
+			in_quotes = ft_abs(in_quotes - 2);
 		if (line[i] == '\'' && (in_quotes == 0 || in_quotes == 1))
-			in_quotes = (in_quotes == 1 ? 0 : 1);
+			in_quotes = ft_abs(in_quotes - 1);
 		i++;
 	}
-
-	ft_lstadd_back(lst, token_new(ARG, ft_substr(line, 0, i)));
+	if (i == 0)
+		return (i);
+	ft_lstadd_back(tokens, token_new(ARG, ft_substr(line, 0, i)));
 	return (i);
+}
+
+static int	add_operators(t_list **tokens, char *line)
+{
+	int	len;
+
+	len = add_operator(line, '&', tokens, LOGICAL);
+	if (len == 0)
+		len = add_operator(line, '|', tokens, LOGICAL);
+	if (len == 0)
+		len = add_operator(line, '|', tokens, PIPE);
+	if (len == 0)
+		len = add_operator(line, '>', tokens, REDIRECT);
+	if (len == 0)
+		len = add_operator(line, '<', tokens, REDIRECT);
+	if (len == 0 && *line == '(')
+		ft_lstadd_back(tokens, token_new(SUBSHELL, ft_strdup("(")));
+	if (len == 0 && *line == ')')
+		ft_lstadd_back(tokens, token_new(SUBSHELL, ft_strdup(")")));
+	if (len == 0 && (*line == '(' || *line == ')'))
+		len = 1;
+	if (len == 0)
+		len = add_arg(line, tokens);
+	return (len);
 }
 
 t_list	*tokenize(char *line)
 {
-	t_list	*lst;
+	t_list	*tokens;
 	size_t	i;
-	int		added;
 
-	lst = NULL;
+	tokens = NULL;
 	i = 0;
 	while (line[i])
 	{
@@ -77,34 +102,7 @@ t_list	*tokenize(char *line)
 			i++;
 		if (!line[i])
 			break ;
-		added = 0;
-		added = add_operator(line, i, '&', 2, &lst, LOGICAL);
-		if (added == 0)
-			added = add_operator(line, i, '|', 2, &lst, LOGICAL);
-		if (added == 0)
-			added = add_operator(line, i, '|', 1, &lst, PIPE);
-		if (added == 0)
-			added = add_operator(line, i, '>', 1, &lst, REDIRECT);
-		if (added == 0)
-			added = add_operator(line, i, '<', 1, &lst, REDIRECT);
-		if (added == 0 && line[i] == '(')
-		{
-			ft_lstadd_back(&lst, token_new(SUBSHELL, ft_strdup("(")));
-			added = 1;
-		}
-		if (added == 0 && line[i] == ')')
-		{
-			ft_lstadd_back(&lst, token_new(SUBSHELL, ft_strdup(")")));
-			added = 1;
-		}
-		if (added == 0 && !is_redirection(line + i) && !is_pipe(line, i) && !is_logical(line, i))
-		{
-			added = add_arg(line + i, &lst);
-		}
-		if (added > 0)
-			i += added;
-		else
-			i++;
+		i += add_operators(&tokens, line + i);
 	}
-	return (lst);
+	return (tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:02:36 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/21 09:01:07 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:33:39 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ void	free_command(void *command)
 	{
 		ft_lstclear(&current->redirects, free);
 		if (current->type == COMMAND)
-			ft_lstclear(&current->args, free);
+			ft_lstclear(&current->args, NULL);
+		else if (current->type == SUB_SHELL)
+			ft_lstclear(&current->tokens, free_token);
 		ft_free_set((void **) &current, current->pipe);
 	}
 }

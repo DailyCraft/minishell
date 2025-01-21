@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 09:14:05 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:33:03 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 		if (pid != 0)
 			return (wait_process(pid, 1));
 	}
+	//tokens = ft_lstmap(command->tokens, dup_token, free_token);
+	ft_btree_clear(&data->btree, free_token_list);
 	data->btree = new_btree(command->tokens);
 	iterate_btree(data);
 	last_status = data->last_status;
