@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 12:19:15 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:18:04 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,12 @@ bool		is_quote(char *line, int index);
 size_t		operator_len(char *line, char c);
 t_list		**get_close_subshell(t_list *tokens);
 int			subshell_level(t_list *lst);
+
+
+//	Eroor
+void		unexpected_token(t_data *data, char *token);
+bool		check_valid_type(t_data *data, t_list *lst, t_token *token);
+bool		check_valid_subshell(t_data *data, t_list *lst, t_token *previous, t_token *token);
 bool		check_unexpected(t_data *data, t_list *lst);
 
 #endif
