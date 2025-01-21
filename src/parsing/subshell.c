@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subshell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 11:13:44 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 08:40:46 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:04:52 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,48 @@ int	subshell_level(char *line, size_t index)
 	return (i + 1);
 } */
 
-bool subshell_errors(t_data *data, char *line, int index)
-{
-	int	i;
+// bool subshell_errors(t_data *data, char *line, int index)
+// {
+// 	int	i;
 
-	if (subshell_level(line, index) < 0)
-		return (unexpected_token(data, ")"));
-	if (line[index] == ')' && !is_in_quotes(line, index))
+// 	if (subshell_level(line, index) < 0)
+// 		return (unexpected_token(data, ")"));
+// 	if (line[index] == ')' && !is_in_quotes(line, index))
+// 	{
+// 		i = index - 1;
+// 		while (i >= 0 && ft_isspace(line[i]) && !is_in_quotes(line, i))
+// 			i--;
+// 		if (line[i] == '(')
+// 			return (unexpected_token(data, ")"));
+// 	}
+// 	if (line[index] == '(' && !is_in_quotes(line, index))
+// 	{
+// 		i = index - 1;
+// 		while (i >= 0 && ft_isspace(line[i]) && !is_in_quotes(line, i))
+// 			i--;
+// 		if (i == -1 || line[i] == '|' || (i > 0 && (ft_strncmp(line + i - 1, "&&", 2) == 0 || ft_strncmp(line + i - 1, "||", 2) == 0)))
+// 		{	
+// 		}
+// 		else
+// 			return (unexpected_token(data, "TODO"));
+// 	}
+// 	return (false);
+// }
+
+int	subshell_level_lst(t_list *lst)
+{
+	t_token	*token;
+	int		level;
+
+	level = 0;
+	while (lst)
 	{
-		i = index - 1;
-		while (i >= 0 && ft_isspace(line[i]) && !is_in_quotes(line, i))
-			i--;
-		if (line[i] == '(')
-			return (unexpected_token(data, ")"));
+		token = lst->content;
+		if (token->type == SUBSHELL && ft_strcmp(token->value, "(") == 0)
+			level++;
+		else if (token->type == SUBSHELL && ft_strcmp(token->value, ")") == 0)
+			level--;
+		lst = lst->next;
 	}
-	if (line[index] == '(' && !is_in_quotes(line, index))
-	{
-		i = index - 1;
-		while (i >= 0 && ft_isspace(line[i]) && !is_in_quotes(line, i))
-			i--;
-		if (i == -1 || line[i] == '|' || (i > 0 && (ft_strncmp(line + i - 1, "&&", 2) == 0 || ft_strncmp(line + i - 1, "||", 2) == 0)))
-		{	
-		}
-		else
-			return (unexpected_token(data, "TODO"));
-	}
-	return (false);
+	return (level);
 }

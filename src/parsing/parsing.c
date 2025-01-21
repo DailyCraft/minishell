@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/21 09:21:13 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:12:19 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ void	parse_btree(t_data *data, char *input)
 	t_list	*tokens;
 
 	tokens = tokenize(input);
-	/* if (check_unexpected(tokens))
+	if (check_unexpected(data, tokens))
 	{
 		data->last_status = 2;
 		data->btree = NULL;
 		return ;
-	} */
+	}
 	data->btree = new_btree(tokens);
 }
 

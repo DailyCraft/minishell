@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 08:39:20 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 11:44:41 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,9 @@ int			count_quotes(char *line);
 void		parse_btree(t_data *data, char *input);
 
 // Error
-bool		unexpected_token(t_data *data, char *token);
+bool		check_unexpected(t_data *data, t_list *lst);
+
+void		unexpected_token(t_data *data, char *token);
 bool		error_file(t_data *data, char *file);
 bool		error_syntax(t_data *data, char *line);
 bool		error_cmd(t_data *data, char *line);
@@ -218,5 +220,8 @@ t_list		*tokenize(char *line);
 t_btree	*new_btree(t_list *tokens);
 void	free_token(void *token);
 t_command	*parse_command(t_list *tokens);
+
+// New_subshell
+int		subshell_level_lst(t_list *lst);
 
 #endif
