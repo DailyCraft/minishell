@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:46:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 08:20:57 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:19:19 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_list	*token_new(int type, char *value)
+t_list	*token_new(int type, char *value)
 {
 	t_token	*token;
 

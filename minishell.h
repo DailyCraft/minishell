@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 16:00:07 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:41:25 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ int			unset_command(t_data *data, t_list *args);
 ///////////////////////////////////////////////////////////////////////////////
 
 // Token
+t_list		*token_new(int type, char *value);
 t_list		*tokenize(char *line);
 t_line		*new_line(t_list *tokens);
 void		free_token(void *token);
@@ -182,9 +183,9 @@ bool		is_in_quotes(char *line, int index);
 char		*remove_quotes(char *line);
 
 // Special characters
-char		*set_venvps(t_data *data, char *line, t_command *command);
+char		*set_venvps(t_data *data, char *line);
 bool		has_wildcards(char *line);
-void		wildcards(t_command *command, char *wildcards);
+t_list		*wildcards(t_command *command, char *wildcards, t_list **current);
 
 // Subshell
 t_list		**get_close_subshell(t_list **tokens);

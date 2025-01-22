@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:58:31 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 15:59:16 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 17:22:19 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,21 @@ static void	redirect(t_data *data, t_command *command, t_list *current)
 	ft_lstadd_back(&command->redirects, ft_lstnew(redirect_str));
 }
 
-static void	arg(t_data *data, t_command *command, char **value)
+static t_list	*arg(t_data *data, t_command *command,
+	char **value, t_list **current)
 {
-	*value = set_venvps(data, *value, command);
+	*value = set_venvps(data, *value);
 	if (!*value)
-		return ;
+		return (NULL);
 	if (has_wildcards(*value))
-		wildcards(command, *value);
+		return (wildcards(command, *value, current));
 	else
 	{
 		*value = remove_quotes(*value);
 		ft_lstadd_back(&command->args, ft_lstnew(*value));
+		return (*current);
 	}
+	return (NULL);
 }
 
 static t_list	**parse_token(t_data *data, t_command *command, t_list *current)
@@ -83,8 +86,7 @@ static t_list	**parse_token(t_data *data, t_command *command, t_list *current)
 	}
 	else if (token->type == ARG)
 	{
-		arg(data, command, &token->value);
-		return (&current->next);
+		return (&arg(data, command, &token->value, &current)->next);
 	}
 	else
 	{
@@ -93,6 +95,7 @@ static t_list	**parse_token(t_data *data, t_command *command, t_list *current)
 	}
 }
 
+//TODO : tokens is not being updated -> wildcards
 t_command	*parse_command(t_data *data, t_list *tokens)
 {
 	t_command	*command;
