@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+         #
+#    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/22 11:12:29 by cgrasser         ###   ########.fr        #
+#    Updated: 2025/01/22 14:51:04 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = gcc -Wall -Wextra -Werror -g #-O3
+CC = gcc -Wall -Wextra -Werror -O0
 
 SRC = envp_utils.c envp.c errors.c main.c signals.c tty.c utils.c
 SRC_CMD = cd.c echo.c env.c exit.c export.c pwd.c unset.c

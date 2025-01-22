@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:48:39 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 10:37:27 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 13:47:48 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,15 @@ int	cd_command(t_data *data, t_list *args)
 		error_msg(data, "%m: cd: too many arguments", NULL);
 		return (EXIT_FAILURE);
 	}
-	else if (!cd_chdir(data, ft_lstgeti(args, 1)->content))
-		return (EXIT_FAILURE);
+	else
+	{
+		if (ft_lstgeti(args, 1))
+			path = ft_lstgeti(args, 1)->content;
+		else
+			path = NULL;
+		if (!cd_chdir(data, path))
+			return (EXIT_FAILURE);
+	}
 	ft_setenv(data, "OLDPWD", ft_getenv(data, "PWD"));
 	path = getcwd(NULL, 0);
 	ft_setenv(data, "PWD", path);

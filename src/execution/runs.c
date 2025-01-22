@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 08:57:59 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:21:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	program = data->program;
 	free_data(data, command);
 	execve(path, argv, envp);
+	program = ft_basename(program);
 	error_msg(NULL, "%s: %s: %n", (char *[]){program, path});
+	free(program);
 	free(path);
 	ft_free_split(argv);
 	ft_free_split(envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 10:26:45 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:00:07 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -60,10 +61,10 @@ typedef struct s_token
 
 enum	e_redirect
 {
-	OUTPUT,
-	APPEND,
-	INPUT,
-	HERE_DOC
+	OUTPUT = 1,
+	APPEND = 2,
+	INPUT = 3,
+	HERE_DOC = 4
 };
 
 enum	e_type
@@ -181,7 +182,7 @@ bool		is_in_quotes(char *line, int index);
 char		*remove_quotes(char *line);
 
 // Special characters
-char		*set_venvps(t_data *data, char *line);
+char		*set_venvps(t_data *data, char *line, t_command *command);
 bool		has_wildcards(char *line);
 void		wildcards(t_command *command, char *wildcards);
 

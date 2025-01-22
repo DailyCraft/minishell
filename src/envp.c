@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 10:45:10 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 14:06:43 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:53:44 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,15 @@ bool	ft_setenv(t_data *data, char *name, char *value)
 
 bool	ft_setenv_parse(t_data *data, char *env)
 {
-	int		sep;
+	size_t	sep;
 	char	*name;
 	bool	result;
 
-	sep = ft_strchr(env, '=') - env;
-	if (sep < 0)
+	sep = (size_t) ft_strchr(env, '=');
+	if (sep == 0)
 		sep = ft_strlen(env);
+	else
+		sep -= (size_t) env;
 	name = ft_memdup(env, sep + 1);
 	name[sep] = 0;
 	if (env[sep] != 0)

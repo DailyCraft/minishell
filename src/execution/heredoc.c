@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:26:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 07:58:52 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:07:27 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	request(t_data *data, char *limit, int interpret)
 		if (g_interrupted)
 			return (free(line), close(fds[0]), close(fds[1]), -1);
 		if (interpret)
-			line = set_venvps(data, line);
+			line = ft_or(set_venvps(data, line), ft_strdup(""));
 		ft_putendl_fd(line, fds[1]);
 		ft_free_set((void **) &line, ft_readline(data, "> "));
 		i++;

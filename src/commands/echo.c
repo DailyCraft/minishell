@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 11:29:29 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 09:57:41 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:26:39 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ int	echo_command(t_list *args)
 	options_count = parse_options(&args);
 	while (args)
 	{
-		printf("%s", (char *) args->content);
+		ft_putstr_fd(args->content, 1);
 		if (args->next)
-			printf(" ");
+			ft_putchar_fd(' ', 1);
 		args = args->next;
 	}
 	if (!options_count)
-		printf("\n");
+		ft_putchar_fd('\n', 1);
 	return (EXIT_SUCCESS);
 }

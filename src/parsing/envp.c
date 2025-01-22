@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 11:49:56 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:12:21 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,19 @@ static char	*join_and_free(char *line, char *to_join)
 	return (new);
 }
 
-static int	envp(t_data *data, char *line, char **new_line)
+// TODO
+static int	envp(t_data *data, char *line, char **new_line, t_command *command)
 {
 	int		i;
 	char	*env;
 
 	i = 0;
-	while (ft_isalnum(line[i]))
+	while (ft_isalnum(line[i]) || line[i] == '_')
 		i++;
 	if (i == 0)
 	{
-		*new_line = join_and_free(*new_line, ft_strdup("$"));
+		ft_lstadd_back(&command->args, ft_lstnew(ft_strdup("$")));
+		//*new_line = join_and_free(*new_line, ft_strdup("$"));
 		return (0);
 	}
 	env = ft_substr(line, 0, i);
@@ -49,7 +51,7 @@ char	*final_value(char *new, char *line)
 	return (new);
 }
 
-char	*set_venvps(t_data *data, char *line)
+char	*set_venvps(t_data *data, char *line, t_command *command)
 {
 	char	*new;
 	int		i;
@@ -62,13 +64,16 @@ char	*set_venvps(t_data *data, char *line)
 	{
 		if (ft_strncmp(line + i, "$?", 2) == 0 && !in_quotes(line, i, '\''))
 		{
-			new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
-			new = join_and_free(new, ft_itoa(data->last_status));
+			ft_lstadd_back(&command->args, ft_lstnew(ft_substr(line, last_envp, i - last_envp)));
+			ft_lstadd_back(&command->args, ft_lstnew(ft_itoa(data->last_status)));
+			// new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
+			// new = join_and_free(new, ft_itoa(data->last_status));
 			last_envp = ++i + 1;
 		}
 		else if (line[i] == '$' && !in_quotes(line, i, '\''))
 		{
-			new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
+			ft_lstadd_back(&command->args, ft_lstnew(ft_substr(line, last_envp, i - last_envp)));
+			//new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
 			i += envp(data, line + i + 1, &new);
 			last_envp = i + 1;
 		}
