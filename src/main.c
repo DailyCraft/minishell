@@ -6,31 +6,35 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 13:14:14 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:01:53 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	iterate_btree(t_data *data)
+void	iterate_line(t_data *data)
 {
-	t_btree		*btree;
-	t_btree		*or;
+	t_line		*line;
+	t_list		*tokens;
 	t_command	*command;
 
-	btree = data->btree;
-	or = NULL;
-	while (btree)
+	line = data->line;
+	tokens = line->ands;
+	while (tokens)
 	{
-		if (btree->right)
-			or = btree->right;
-		command = parse_command(btree->content);
+		command = parse_command(data, tokens->content);
 		if (execute(data, command) == 0)
-			btree = btree->left;
+			tokens = tokens->next;
 		else
 		{
-			btree = or;
-			or = NULL;
+			line = line->or;
+			if (line)
+				tokens = line->ands;
+			else
+			{
+				free_command(command);
+				break ;
+			}
 		}
 		free_command(command);
 	}
@@ -45,11 +49,11 @@ static void	loop(t_data *data)
 	{
 		if (isatty(STDIN_FILENO) && !is_empty_command_line(input))
 			add_history(input);
-		parse_btree(data, input);
+		parse_line(data, input);
 		free(input);
-		if (data->btree)
-			iterate_btree(data);
-		ft_btree_clear(&data->btree, free_token_list);
+		if (data->line)
+			iterate_line(data);
+		free_line(&data->line);
 		input = ft_readline(data, NULL);
 	}
 	if (isatty(STDIN_FILENO))
@@ -67,7 +71,7 @@ int	main(int argc __attribute__((unused)), char **argv, char **envp)
 	data.program = argv[0];
 	data.last_status = 0;
 	data.envp = NULL;
-	data.btree = NULL;
+	data.line = NULL;
 	init_envp(&data, envp);
 	signals(1);
 	print_header();

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:46:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 10:31:18 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:20:57 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,14 @@ static t_list	*token_new(int type, char *value)
 	return (ft_lstnew(token));
 }
 
-static int	add_operator(char *line, char operator, t_list **tokens, int type)
+static int	add_operator(char *line, char *operator, t_list **tokens, int type)
 {
-	int	min;
-	int	len;
+	size_t	len;
 
-	min = 1 + (type == LOGICAL);
-	len = operator_len(line, operator);
-	if (len >= min)
-		ft_lstadd_back(tokens, token_new(type, ft_substr(line, 0, len)));
-	if (len < min)
+	len = ft_strlen(operator);
+	if (ft_strncmp(line, operator, len) != 0)
 		return (0);
+	ft_lstadd_back(tokens, token_new(type, ft_substr(line, 0, len)));
 	return (len);
 }
 
@@ -69,15 +66,19 @@ static int	add_operators(t_list **tokens, char *line)
 {
 	int	len;
 
-	len = add_operator(line, '&', tokens, LOGICAL);
+	len = add_operator(line, "&&", tokens, LOGICAL);
 	if (len == 0)
-		len = add_operator(line, '|', tokens, LOGICAL);
+		len = add_operator(line, "||", tokens, LOGICAL);
 	if (len == 0)
-		len = add_operator(line, '|', tokens, PIPE);
+		len = add_operator(line, "|", tokens, PIPE);
 	if (len == 0)
-		len = add_operator(line, '>', tokens, REDIRECT);
+		len = add_operator(line, ">>", tokens, REDIRECT);
 	if (len == 0)
-		len = add_operator(line, '<', tokens, REDIRECT);
+		len = add_operator(line, "<<", tokens, REDIRECT);
+	if (len == 0)
+		len = add_operator(line, ">", tokens, REDIRECT);
+	if (len == 0)
+		len = add_operator(line, "<", tokens, REDIRECT);
 	if (len == 0 && *line == '(')
 		ft_lstadd_back(tokens, token_new(SUBSHELL, ft_strdup("(")));
 	if (len == 0 && *line == ')')

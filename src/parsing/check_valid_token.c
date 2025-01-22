@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   check_valid_token.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:42:11 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/21 16:20:35 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:22:53 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: echo 1 && (echo 2)
 bool	check_valid_type(t_data *data, t_list *lst, t_token *token)
 {
 	t_token	*token_next;

@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   operator.c                                         :+:      :+:    :+:   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/08 16:50:41 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/21 12:17:02 by dvan-hum         ###   ########.fr       */
+/*   Created: 2025/01/21 10:00:22 by dvan-hum          #+#    #+#             */
+/*   Updated: 2025/01/21 14:15:04 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-size_t	operator_len(char *line, char c)
+void	free_token(void *token)
 {
-	size_t	i;
+	free(((t_token *) token)->value);
+	free(token);
+}
 
-	i = 0;
-	while (line[i] == c)
-		i++;
-	return (i);
+void	free_token_list(void *tokens)
+{
+	ft_lstclear((t_list **) &tokens, free_token);
+}
+
+void	*dup_token(void *token)
+{
+	t_token	*dup;
+
+	dup = ft_memdup(token, sizeof(t_token));
+	dup->value = ft_strdup(dup->value);
+	return (dup);
 }

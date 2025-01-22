@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dollar_sign.c                                      :+:      :+:    :+:   */
+/*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/17 15:25:09 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:42:10 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ static int	envp(t_data *data, char *line, char **new_line)
 	i = 0;
 	while (ft_isalnum(line[i]))
 		i++;
+	if (i == 0)
+	{
+		*new_line = join_and_free(*new_line, ft_strdup("$"));
+		return (0);
+	}
 	env = ft_substr(line, 0, i);
 	env = ft_free_set((void **) &env, ft_or(ft_getenv(data, env), ""));
 	*new_line = join_and_free(*new_line, ft_strdup(env));
@@ -49,6 +54,7 @@ char	*set_venvps(t_data *data, char *line)
 	{
 		if (ft_strncmp(line + i, "$?", 2) == 0 && !in_quotes(line, i, '\''))
 		{
+			new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
 			new = join_and_free(new, ft_itoa(data->last_status));
 			i++;
 			last_envp = i + 1;

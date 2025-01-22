@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:26:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 10:01:57 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 07:58:52 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ static bool	get_heredoc(t_data *data, t_command *command)
 		{
 			if (command->fds.heredoc != 0)
 				close(command->fds.heredoc);
-			interpret = count_quotes(lst->content + 1) == 0
-				&& nb_backslash(lst->content + 1) == 0;
-			lst->content = remove_extra_c(lst->content);
+			interpret = count_quotes(lst->content + 1) == 0;
+			lst->content = remove_quotes(lst->content);
 			command->fds.heredoc = request(data, lst->content + 1, interpret);
 			if (command->fds.heredoc == -1)
 				return (false);

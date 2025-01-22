@@ -3,22 +3,22 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+         #
+#    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/21 13:49:14 by cgrasser         ###   ########.fr        #
+#    Updated: 2025/01/22 08:05:42 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = gcc -Wall -Wextra -Werror -g
+CC = gcc -Wall -Wextra -Werror -g -O3
 
 SRC = envp_utils.c envp.c errors.c main.c signals.c tty.c utils.c
 SRC_CMD = cd.c echo.c env.c exit.c export.c pwd.c unset.c
 SRC_EXEC = exec.c heredoc.c pipeline.c redirect.c runs.c utils.c
-SRC_PARSING = backslash.c command_utils.c parsing.c quote.c wildcards.c token.c dollar_sign.c \
-command.c operator.c utils.c command_error.c subshell.c check_valid_token.c
+SRC_PARSING = command_utils.c line.c quote.c wildcards.c tokenize.c envp.c command.c \
+	token_utils.c command_error.c subshell.c check_valid_token.c
 SRC += $(SRC_CMD:%=commands/%) $(SRC_EXEC:%=execution/%) $(SRC_PARSING:%=parsing/%)
 HEADERS = minishell.h
 OBJ = $(SRC:%.c=obj/%.o)

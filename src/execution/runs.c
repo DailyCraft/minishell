@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 13:33:03 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:57:59 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static int	check_path(t_data *data, char *arg, char **path)
 	if (*path)
 		return (0);
 	if (errno == ESRCH)
-		return (error_msg(data, "%s: command not found", (char *[]){arg}), 127);
+		return (error_msg(data, "%m: %s: command not found",
+				(char *[]){arg}), 127);
 	if (errno == ENOENT)
 		return (error_msg(data, "%m: %s: %n", (char *[]){arg}), 127);
 	if (errno == EISDIR)
@@ -78,11 +79,12 @@ int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 		if (pid != 0)
 			return (wait_process(pid, 1));
 	}
-	//tokens = ft_lstmap(command->tokens, dup_token, free_token);
-	ft_btree_clear(&data->btree, free_token_list);
-	data->btree = new_btree(command->tokens);
-	iterate_btree(data);
+	free_line(&data->line);
+	free_gnl();
+	data->line = new_line(command->tokens);
+	iterate_line(data);
 	last_status = data->last_status;
+	command->tokens = NULL;
 	free_data(data, command);
 	exit(last_status);
 }

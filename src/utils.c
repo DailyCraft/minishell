@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:52:37 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 11:39:28 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:57:26 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,5 @@ void	free_data(t_data *data, t_command *command)
 		return ;
 	data->program = NULL;
 	ft_lstclear(&data->envp, free_env);
-	ft_btree_clear(&data->btree, free_token_list);
+	free_line(&data->line);
 }

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:50:21 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 10:35:20 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:00:50 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,18 @@ static int	no_args(t_data *data)
 	return (EXIT_SUCCESS);
 }
 
+static bool	check_key(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	if (ft_isdigit(str[0]))
+		return (false);
+	while (ft_isalnum(str[i]) || str[i] == '_')
+		i++;
+	return (str[i] == 0 || str[i] == '=');
+}
+
 int	export_command(t_data *data, t_list *args)
 {
 	int		status;
@@ -48,9 +60,9 @@ int	export_command(t_data *data, t_list *args)
 	lst = args->next;
 	while (lst)
 	{
-		if (!ft_setenv_parse(data, lst->content))
+		if (!check_key(lst->content) || !ft_setenv_parse(data, lst->content))
 		{
-			error_msg(data, "%m: export: '%s': not a valid identifier",
+			error_msg(data, "%m: export: `%s': not a valid identifier",
 				(char *[]){lst->content});
 			status = EXIT_FAILURE;
 		}

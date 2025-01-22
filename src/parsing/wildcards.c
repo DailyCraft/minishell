@@ -6,13 +6,13 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:13:28 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 14:17:17 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:27:04 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	have_wildcards(char *line)
+bool	has_wildcards(char *line)
 {
 	int	i;
 
@@ -74,6 +74,7 @@ static int	file_cmp(char *s1, char *s2)
 		- (unsigned char) ft_tolower(s2[i]));
 }
 
+// TODO: Leaks
 void	wildcards(t_command *command, char *wildcards)
 {
 	DIR				*dir;
@@ -93,6 +94,6 @@ void	wildcards(t_command *command, char *wildcards)
 	if (files)
 		ft_lstsort(files, (int (*)(void *, void *)) file_cmp);
 	else
-		files = ft_lstnew(remove_extra_c(wildcards));
+		files = ft_lstnew(remove_quotes(wildcards));
 	ft_lstadd_back(&command->args, files);
 }

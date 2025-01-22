@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:50:19 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/20 13:48:46 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:34:12 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool	in_quotes(char *line, int index, char to_find)
 
 	i = 0;
 	quote = 0;
-	while (line[i] && i < (index + 1))
+	while (line[i] && i <= index)
 	{
 		if (is_quote(line, i) && quote == 0)
 			quote = line[i];
@@ -40,7 +40,7 @@ bool	in_quotes(char *line, int index, char to_find)
 		return (0);
 	while (line[i] && line[i] != quote)
 		i++;
-	return (line[i] == quote && line[i] == to_find);
+	return (!line[i] || (line[i] == quote && line[i] == to_find));
 }
 
 bool	is_in_quotes(char *line, int index)
