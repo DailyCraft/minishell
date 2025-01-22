@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 09:42:10 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:49:56 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,14 @@ static int	envp(t_data *data, char *line, char **new_line)
 	return (i);
 }
 
+char	*final_value(char *new, char *line)
+{
+	free(line);
+	if (new[0] == 0)
+		return (free(new), NULL);
+	return (new);
+}
+
 char	*set_venvps(t_data *data, char *line)
 {
 	char	*new;
@@ -56,8 +64,7 @@ char	*set_venvps(t_data *data, char *line)
 		{
 			new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
 			new = join_and_free(new, ft_itoa(data->last_status));
-			i++;
-			last_envp = i + 1;
+			last_envp = ++i + 1;
 		}
 		else if (line[i] == '$' && !in_quotes(line, i, '\''))
 		{
@@ -67,6 +74,6 @@ char	*set_venvps(t_data *data, char *line)
 		}
 		i++;
 	}
-	new = join_and_free(new, ft_substr(line, last_envp, i));
-	return (free(line), new);
+	new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
+	return (final_value(new, line));
 }

@@ -3,19 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   check_valid_token.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:42:11 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 08:22:53 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:59:21 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	check_valid_type(t_data *data, t_list *lst, t_token *token)
+bool	check_valid_type(t_data *data, t_list *lst,
+	t_token *previous, t_token *token)
 {
 	t_token	*token_next;
 
+	if (!previous && (token->type == LOGICAL || token->type == PIPE))
+		return (unexpected_token(data, token->value), false);
 	if (!lst->next)
 	{
 		if (token->type == REDIRECT)
@@ -28,7 +31,7 @@ bool	check_valid_type(t_data *data, t_list *lst, t_token *token)
 		token_next = lst->next->content;
 		if (token->type == REDIRECT && token_next->type != ARG)
 			return (unexpected_token(data, token_next->value), false);
-		else if (token_next->type != ARG && token_next->type != SUBSHELL)
+		else if (token_next->type == LOGICAL || token_next->type == PIPE)
 			return (unexpected_token(data, token_next->value), false);
 	}
 	return (true);
@@ -67,7 +70,9 @@ bool	check_valid_subshell(t_data *data, t_list *lst,
 	{
 		if (!previous || (previous->type != ARG && previous->type != SUBSHELL))
 			return (unexpected_token(data, token->value), false);
-		if (token_next && token_next == ARG)
+		if (token_next && (token_next->type == ARG
+				|| (token_next->type == SUBSHELL
+					&& ft_strcmp(token_next->value, "(") == 0)))
 			return (unexpected_token(data, token_next->value), false);
 	}
 	return (true);

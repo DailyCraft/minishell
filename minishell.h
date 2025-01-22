@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 08:10:43 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:26:45 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,8 @@ int			subshell_level(t_list *lst);
 
 //	Error
 void		unexpected_token(t_data *data, char *token);
-bool		check_valid_type(t_data *data, t_list *lst, t_token *token);
+bool		check_valid_type(t_data *data, t_list *lst,
+				t_token *previous, t_token *token);
 bool		check_valid_subshell(t_data *data, t_list *lst,
 				t_token *previous, t_token *token);
 bool		check_unexpected(t_data *data, t_list *lst);

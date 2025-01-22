@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:58:31 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 08:11:08 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:19:08 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static void	redirect(t_data *data, t_command *command, t_list *current)
 static void	arg(t_data *data, t_command *command, char **value)
 {
 	*value = set_venvps(data, *value);
+	if (!*value)
+		return ;
 	if (has_wildcards(*value))
 		wildcards(command, *value);
 	else

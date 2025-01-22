@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:27:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 08:21:36 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:25:24 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	check_tokens(t_data *data, t_list *lst)
 	{
 		token = (t_token *)lst->content;
 		if (token->type != ARG && token->type != SUBSHELL)
-			if (!check_valid_type(data, lst, token))
+			if (!check_valid_type(data, lst, previous, token))
 				return (false);
 		if (token->type == SUBSHELL)
 			if (!check_valid_subshell(data, lst, previous, token))
