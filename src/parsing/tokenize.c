@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:46:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 15:19:19 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:19:40 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,29 +36,27 @@ static int	add_operator(char *line, char *operator, t_list **tokens, int type)
 static int	add_arg(char *line, t_list **tokens)
 {
 	size_t	i;
-	int		in_quotes;
+	char	quote;
 
 	i = 0;
-	in_quotes = 0;
-	while (line[i] && (!ft_isspace(line[i]) || (i > 0 && line[i - 1] == '\\')
-			|| in_quotes))
+	quote = 0;
+	while (line[i] && (!ft_isspace(line[i]) || quote != 0))
 	{
-		if (!in_quotes)
+		if (quote == 0)
 		{
 			if (ft_strncmp(line + i, "&&", 2) == 0
 				|| line[i] == '|' || line[i] == '>' || line[i] == '<'
 				|| line[i] == '(' || line[i] == ')')
 				break ;
 		}
-		if (line[i] == '"' && (in_quotes == 0 || in_quotes == 2))
-			in_quotes = ft_abs(in_quotes - 2);
-		if (line[i] == '\'' && (in_quotes == 0 || in_quotes == 1))
-			in_quotes = ft_abs(in_quotes - 1);
+		if ((line[i] == '"' || line[i] == '\'') && quote == 0)
+			quote = line[i];
+		else if (line[i] == quote)
+			quote = 0;
 		i++;
 	}
-	if (i == 0)
-		return (i);
-	ft_lstadd_back(tokens, token_new(ARG, ft_substr(line, 0, i)));
+	if (i > 0)
+		ft_lstadd_back(tokens, token_new(ARG, ft_substr(line, 0, i)));
 	return (i);
 }
 

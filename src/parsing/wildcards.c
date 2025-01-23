@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:13:28 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 17:21:17 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/23 11:26:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	cmp_wildcards(char *file, char *arg)
 	j = 0;
 	while (arg[i])
 	{
-		if (is_quote(arg, i))
+		if (is_quote(arg, i) && !is_in_quotes(arg, i))
 		{
 		}
 		else if (arg[i] == '*' && !is_in_quotes(arg, i))
@@ -55,7 +55,7 @@ static int	cmp_wildcards(char *file, char *arg)
 	return (file[j] == '\0');
 }
 
-int	file_cmp(char *s1, char *s2)
+static int	file_cmp(char *s1, char *s2)
 {
 	char	*originals[2];
 	size_t	i;
@@ -75,13 +75,15 @@ int	file_cmp(char *s1, char *s2)
 		- (unsigned char) ft_tolower(s2[i]));
 }
 
-t_list	*add_tokens(t_list **current, t_list *files)
+static t_list	*add_tokens(t_command *command, t_list **current, t_list *files)
 {
 	t_list	*next;
 	t_list	*prev;
 
+	ft_lstsort(files, (int (*)(void *, void *)) file_cmp);
+	ft_lstadd_back(&command->args, files);
 	next = (*current)->next;
-	//ft_lstdelone(*current, NULL);
+	ft_lstdelone(*current, free_token);
 	prev = NULL;
 	while (files)
 	{
@@ -94,9 +96,7 @@ t_list	*add_tokens(t_list **current, t_list *files)
 	return (prev);
 }
 
-// TODO: Leaks
 // TODO: $*
-// TODO: files with quotes?
 t_list	*wildcards(t_command *command, char *wildcards, t_list **current)
 {
 	DIR				*dir;
@@ -114,9 +114,9 @@ t_list	*wildcards(t_command *command, char *wildcards, t_list **current)
 	}
 	closedir(dir);
 	if (files)
-		ft_lstsort(files, (int (*)(void *, void *)) file_cmp);
-	else
-		files = ft_lstnew(remove_quotes(wildcards));
-	ft_lstadd_back(&command->args, files);
-	return (add_tokens(current, files));
+		return (add_tokens(command, current, files));
+	wildcards = remove_quotes(wildcards);
+	((t_token *)(*current)->content)->value = wildcards;
+	ft_lstadd_back(&command->args, ft_lstnew(wildcards));
+	return (*current);
 }

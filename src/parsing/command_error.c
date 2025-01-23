@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:27:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 10:25:24 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/22 20:20:03 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ bool	check_tokens(t_data *data, t_list *lst)
 	return (true);
 }
 
-// TODO: '|||' & '|| |' & '| ||'
 bool	check_unexpected(t_data *data, t_list *lst)
 {
 	if (!check_tokens(data, lst))

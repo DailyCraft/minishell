@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:58:31 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 17:22:19 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:11:47 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static t_list	**subshell(t_command *command, t_list *current)
 	return (&(*close)->next);
 }
 
+// TODO: env
 static void	redirect(t_data *data, t_command *command, t_list *current)
 {
 	char	*redirect_str;
@@ -47,67 +48,70 @@ static void	redirect(t_data *data, t_command *command, t_list *current)
 	ft_strcpy(redirect_str + 1, file);
 	if (redirect != HERE_DOC)
 	{
-		redirect_str = set_venvps(data, redirect_str);
+		(void) data;
+		//redirect_str = set_venvps(data, redirect_str);
 		redirect_str = remove_quotes(redirect_str);
 	}
 	ft_lstadd_back(&command->redirects, ft_lstnew(redirect_str));
 }
 
-static t_list	*arg(t_data *data, t_command *command,
-	char **value, t_list **current)
+// TODO: envp with quotes
+static t_list	**arg(t_data *data, t_command *command, t_list **current)
 {
-	*value = set_venvps(data, *value);
-	if (!*value)
-		return (NULL);
-	if (has_wildcards(*value))
-		return (wildcards(command, *value, current));
-	else
+	t_list	**lst;
+	t_list	*post;
+	char	**value;
+
+	post = (*current)->next;
+	command_venvps(data, current);
+	lst = current;
+	while (*lst != post)
 	{
-		*value = remove_quotes(*value);
-		ft_lstadd_back(&command->args, ft_lstnew(*value));
-		return (*current);
+		value = &((t_token *) (*lst)->content)->value;
+		if (has_wildcards(*value))
+			lst = &wildcards(command, *value, lst)->next;
+		else
+		{
+			*value = remove_quotes(*value);
+			ft_lstadd_back(&command->args, ft_lstnew(*value));
+			lst = &(*lst)->next;
+		}
 	}
-	return (NULL);
+	return (lst);
 }
 
-static t_list	**parse_token(t_data *data, t_command *command, t_list *current)
+static t_list	**parse_token(t_data *data, t_command *command,
+	t_list **current)
 {
 	t_token	*token;
 
-	token = current->content;
+	token = (*current)->content;
 	if (token->type == SUBSHELL)
-	{
-		return (subshell(command, current));
-	}
+		return (subshell(command, *current));
 	else if (token->type == REDIRECT)
 	{
-		redirect(data, command, current);
-		return (&current->next->next);
+		redirect(data, command, *current);
+		return (&(*current)->next->next);
 	}
 	else if (token->type == ARG)
-	{
-		return (&arg(data, command, &token->value, &current)->next);
-	}
+		return (arg(data, command, current));
 	else
 	{
-		command->pipe = parse_command(data, current->next);
+		command->pipe = parse_command(data, &(*current)->next);
 		return (NULL);
 	}
 }
 
-//TODO : tokens is not being updated -> wildcards
-t_command	*parse_command(t_data *data, t_list *tokens)
+t_command	*parse_command(t_data *data, t_list **tokens)
 {
 	t_command	*command;
-	t_list		**current;
 
 	command = ft_calloc(1, sizeof(t_command));
 	command->type = COMMAND;
-	current = &tokens;
-	while (*current)
+	while (*tokens)
 	{
-		current = parse_token(data, command, *current);
-		if (current == NULL)
+		tokens = parse_token(data, command, tokens);
+		if (tokens == NULL)
 			break ;
 	}
 	return (command);

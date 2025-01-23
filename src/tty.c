@@ -6,15 +6,15 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:12:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 16:23:25 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:40:47 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_header(void)
+void	print_header(t_data *data)
 {
-	if (!isatty(STDIN_FILENO))
+	if (!data->is_tty)
 		return ;
 	printf("\n"
 		" ███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗\n"
@@ -57,7 +57,7 @@ char	*ft_readline(t_data *data, char *prompt)
 {
 	char	*line;
 
-	if (isatty(STDIN_FILENO))
+	if (data->is_tty)
 	{
 		if (prompt == NULL)
 		{
@@ -74,11 +74,11 @@ char	*ft_readline(t_data *data, char *prompt)
 	return (line);
 }
 
-void	free_gnl(void)
+void	free_gnl(bool is_tty)
 {
 	char	*line;
 
-	if (isatty(STDIN_FILENO))
+	if (is_tty)
 		return ;
 	line = get_next_line(0);
 	while (line)

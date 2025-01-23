@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 16:41:25 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:11:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,6 @@ struct s_line
 	t_list	*ands;
 	t_line	*or;
 };
-
-typedef struct s_data
-{
-	char	*program;
-	t_list	*envp;
-	int		last_status;
-	t_line	*line;
-}	t_data;
 
 enum	e_token
 {
@@ -93,6 +85,16 @@ struct	s_command
 	t_command	*pipe;
 };
 
+typedef struct s_data
+{
+	char		*program;
+	t_list		*envp;
+	bool		is_tty;
+	int			last_status;
+	t_line		*line;
+	t_command	*command;
+}	t_data;
+
 ////////////////////////////////////////////////////////////////////////////////
 /// -------------------------------- COMMON -------------------------------- ///
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,9 +122,9 @@ t_list		*ft_lstdup(t_list *lst);
 char		**ft_lsttoa(t_list *lst, char *(*conv)(void *));
 void		free_data(t_data *data, t_command *command);
 
-void		print_header(void);
+void		print_header(t_data *data);
 char		*ft_readline(t_data *data, char *prompt);
-void		free_gnl(void);
+void		free_gnl(bool is_tty);
 
 void		signals(int enable);
 int			wait_process(pid_t pid, int ignore_sigint);
@@ -171,7 +173,7 @@ void		free_line(t_line **line);
 
 // Parsing
 void		parse_line(t_data *data, char *input);
-t_command	*parse_command(t_data *data, t_list *tokens);
+t_command	*parse_command(t_data *data, t_list **tokens);
 void		free_command(void *command);
 bool		is_empty_command_line(char *command_line);
 
@@ -184,6 +186,7 @@ char		*remove_quotes(char *line);
 
 // Special characters
 char		*set_venvps(t_data *data, char *line);
+t_list		*command_venvps(t_data *data, t_list **current);
 bool		has_wildcards(char *line);
 t_list		*wildcards(t_command *command, char *wildcards, t_list **current);
 

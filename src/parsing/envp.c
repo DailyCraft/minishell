@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 16:42:04 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:12:10 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static char	*join_and_free(char *line, char *to_join)
 	return (new);
 }
 
-// TODO
 static int	envp(t_data *data, char *line, char **new_line)
 {
 	int		i;
@@ -40,14 +39,6 @@ static int	envp(t_data *data, char *line, char **new_line)
 	env = ft_free_set((void **) &env, ft_or(ft_getenv(data, env), ""));
 	*new_line = join_and_free(*new_line, ft_strdup(env));
 	return (i);
-}
-
-char	*final_value(char *new, char *line)
-{
-	free(line);
-	if (new[0] == 0)
-		return (free(new), NULL);
-	return (new);
 }
 
 char	*set_venvps(t_data *data, char *line)
@@ -75,6 +66,40 @@ char	*set_venvps(t_data *data, char *line)
 		}
 		i++;
 	}
-	new = join_and_free(new, ft_substr(line, last_envp, i - last_envp));
-	return (final_value(new, line));
+	return (join_and_free(new, ft_substr(line, last_envp, i - last_envp)));
+}
+
+t_list	*command_venvps(t_data *data, t_list **current)
+{
+	t_list	*next;
+	t_list	*prev;
+	char	*new;
+	size_t	i;
+	size_t	j;
+	char	*sub;
+
+	new = set_venvps(data, ((t_token *)(*current)->content)->value);
+	next = (*current)->next;
+	ft_lstdelone(*current, free_token);
+	prev = NULL;
+	i = 0;
+	while (new[i])
+	{
+		if (!ft_isspace(new[i]))
+		{
+			j = i;
+			while (new[j] && (!ft_isspace(new[j]) || is_in_quotes(new, j)))
+				j++;
+			sub = ft_substr(new, i, j - i);
+			*current = token_new(ARG, sub);
+			prev = *current;
+			current = &(*current)->next;
+			i = j;
+		}
+		else
+			i++;
+	}
+	free(new);
+	*current = next;
+	return (prev);
 }

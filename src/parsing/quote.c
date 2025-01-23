@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:50:19 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/21 14:34:12 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 20:17:50 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,7 @@
 
 bool	is_quote(char *line, int index)
 {
-	if (line[index] == '\'')
-		return (true);
-	if (line[index] == '"' && (index == 0 || line[index - 1] != '\\'))
-		return (true);
-	return (false);
+	return (line[index] == '\'' || line[index] == '"');
 }
 
 bool	in_quotes(char *line, int index, char to_find)

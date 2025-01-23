@@ -6,14 +6,12 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:50:15 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 15:24:45 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:13:15 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: $GEGRG
-// TODO: ls >"./outfiles/outfile with spaces"
 int	execute(t_data *data, t_command *command)
 {
 	int	backup_fds[2];

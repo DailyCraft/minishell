@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 15:21:51 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 23:02:33 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	char	**envp;
 	char	**argv;
 	char	*program;
+	bool	is_tty;
 
 	envp = ft_lsttoa(data->envp, flat_envp);
 	argv = ft_lsttoa(command->args, (char *(*)(void *)) ft_strdup);
 	program = data->program;
-	free_data(data, command);
+	is_tty = data->is_tty;
+	free_data(data, data->command);
 	execve(path, argv, envp);
 	program = ft_basename(program);
 	error_msg(NULL, "%s: %s: %n", (char *[]){program, path});
@@ -29,7 +31,7 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	free(path);
 	ft_free_split(argv);
 	ft_free_split(envp);
-	free_gnl();
+	free_gnl(is_tty);
 	exit(126);
 }
 
@@ -72,8 +74,9 @@ int	run_external(t_data *data, t_command *command, int in_fork)
 
 int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 {
-	pid_t	pid;
-	int		last_status;
+	pid_t		pid;
+	t_command	*first_command;
+	int			last_status;
 
 	if (in_fork)
 	{
@@ -82,11 +85,12 @@ int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 			return (wait_process(pid, 1));
 	}
 	free_line(&data->line);
-	free_gnl();
 	data->line = new_line(command->tokens);
+	first_command = data->command;
 	iterate_line(data);
 	last_status = data->last_status;
 	command->tokens = NULL;
-	free_data(data, command);
+	free_gnl(data->is_tty);
+	free_data(data, first_command);
 	exit(last_status);
 }

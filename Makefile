@@ -6,13 +6,13 @@
 #    By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/02 08:35:31 by dvan-hum          #+#    #+#              #
-#    Updated: 2025/01/22 14:51:04 by dvan-hum         ###   ########.fr        #
+#    Updated: 2025/01/23 11:53:51 by dvan-hum         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = gcc -Wall -Wextra -Werror -O0
+CC = gcc -Wall -Wextra -Werror -g
 
 SRC = envp_utils.c envp.c errors.c main.c signals.c tty.c utils.c
 SRC_CMD = cd.c echo.c env.c exit.c export.c pwd.c unset.c
@@ -57,8 +57,11 @@ re: fclean all
 
 bonus: all
 
-gdb: all
-	gdb -q -tui ./minishell
-
 run: all
-	./minishell
+	./$(NAME)
+
+gdb: all
+	gdb -q -tui ./$(NAME)
+
+vg: all
+	valgrind --leak-check=full ./$(NAME)

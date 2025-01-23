@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 13:06:46 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 14:11:11 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:37:17 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	exit_command(t_data *data, t_command *command, t_list *args)
 	long long		value;
 	int				unclear;
 
-	if (isatty(STDIN_FILENO))
+	if (data->is_tty)
 		printf("exit\n");
 	if (ft_lstsize(args) == 1)
 		(free_data(data, command), exit(data->last_status));
