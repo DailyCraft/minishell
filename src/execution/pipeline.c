@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:51:27 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 22:54:19 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 23:17:02 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,21 @@ static int	child_process(t_data *data, t_command *command, int input, int *fds)
 	}
 	status = run_command(data, command, 0);
 	free_gnl(data->is_tty);
-	free_data(data, command);
+	free_data(data, data->command);
 	exit(status);
+}
+
+void	close_heredocs(t_command *except)
+{
+	t_command	*command;
+
+	command = except;
+	while (command)
+	{
+		if (command != except && command->fds.heredoc > 0)
+			close(command->fds.heredoc);
+		command = command->pipe;
+	}
 }
 
 int	execute_pipeline(t_data *data, t_command *command, int input_fd)
@@ -44,9 +57,12 @@ int	execute_pipeline(t_data *data, t_command *command, int input_fd)
 	pid = fork();
 	if (pid == 0)
 	{
+		close_heredocs(command);
 		signals(0);
 		return (child_process(data, command, input_fd, fds));
 	}
+	if (command->fds.heredoc > 0)
+		close(command->fds.heredoc);
 	if (input_fd != 0)
 		close(input_fd);
 	if (!command->pipe)

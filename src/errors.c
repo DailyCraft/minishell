@@ -6,13 +6,13 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:43:53 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/16 18:56:01 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 23:40:15 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	print_minishell(t_data *data)
+static void	add_minishell(t_data *data, char *buf)
 {
 	char	*value;
 
@@ -21,7 +21,7 @@ static void	print_minishell(t_data *data)
 	else
 		value = "minishell";
 	value = ft_basename(value);
-	ft_putstr_fd(value, 2);
+	ft_strcat(buf, value);
 	free(value);
 }
 
@@ -36,22 +36,26 @@ void	error_msg(t_data *data, char *format, char **args)
 {
 	char	*percent;
 	int		arg_i;
+	char	buf[4096];
 
 	arg_i = 0;
 	percent = ft_strchr(format, '%');
+	ft_bzero(buf, 4096);
 	while (percent)
 	{
-		errno_safe(data, "write", write(2, format, percent - format));
+		ft_strncat(buf, format, percent - format);
 		format = percent + 2;
 		if (percent[1] == 'm')
-			print_minishell(data);
+			add_minishell(data, buf);
 		else if (percent[1] == 's')
-			ft_putstr_fd(args[arg_i++], 2);
+			ft_strcat(buf, args[arg_i++]);
 		else if (percent[1] == 'n')
-			ft_putstr_fd(strerror(errno), 2);
+			ft_strcat(buf, strerror(errno));
 		percent = ft_strchr(format, '%');
 	}
-	ft_putendl_fd(format, 2);
+	ft_strcat(buf, format);
+	ft_strcat(buf, "\n");
+	ft_putstr_fd(buf, 2);
 }
 
 int	errno_safe(t_data *data, char *name, int function)

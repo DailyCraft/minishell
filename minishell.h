@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/23 14:11:14 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 22:22:29 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@
 typedef struct s_line		t_line;
 struct s_line
 {
-	t_list	*ands;
-	t_line	*or;
+	t_list	*tokens;
+	bool	is_and;
+	t_line	*next;
 };
 
 enum	e_token
@@ -77,6 +78,7 @@ struct	s_command
 	t_list		*redirects;
 	struct s_fds
 	{
+		int	backups[2];
 		int	last_input;
 		int	heredoc;
 		int	input;
@@ -165,7 +167,7 @@ int			unset_command(t_data *data, t_list *args);
 // Token
 t_list		*token_new(int type, char *value);
 t_list		*tokenize(char *line);
-t_line		*new_line(t_list *tokens);
+t_line		*new_line(t_list *tokens, bool is_and);
 void		free_token(void *token);
 void		free_token_list(void *tokens);
 void		*dup_token(void *token);

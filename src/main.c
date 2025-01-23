@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/23 14:18:30 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:04:20 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,26 @@
 void	iterate_line(t_data *data)
 {
 	t_line		*line;
-	t_list		*tokens;
 	t_command	*command;
 	int			status;
 
 	line = data->line;
-	tokens = line->ands;
-	while (tokens)
+	status = 0;
+	while (line)
 	{
-		command = parse_command(data, (t_list **) &tokens->content);
-		data->command = command;
-		status = execute(data, command);
-		free_command(command);
-		if (status == 0)
-			tokens = tokens->next;
-		else
+		if (line->is_and == (status == 0))
 		{
-			line = line->or;
-			if (line)
-				tokens = line->ands;
-			else
-				break ;
+			command = parse_command(data, (t_list **) &line->tokens);
+			if (!command)
+			{
+				data->last_status = 1;
+				return ;
+			}
+			data->command = command;
+			status = execute(data, command);
+			free_command(command);
 		}
+		line = line->next;
 	}
 }
 

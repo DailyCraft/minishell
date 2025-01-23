@@ -6,41 +6,21 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 08:41:18 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:52:22 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_list	*logical(t_line *line, t_list **current)
-{
-	t_list	*tokens;
-	t_token	*token;
-	int		is_and;
-
-	token = (*current)->content;
-	is_and = token->value[0] == '&';
-	tokens = (*current)->next;
-	ft_lstdelone(*current, free_token);
-	*current = NULL;
-	if (is_and)
-		ft_lstadd_back(&line->ands, ft_lstnew(tokens));
-	else
-	{
-		line->or = new_line(tokens);
-		return (NULL);
-	}
-	return (tokens);
-}
-
-t_line	*new_line(t_list *tokens)
+t_line	*new_line(t_list *tokens, bool is_and)
 {
 	t_line	*line;
 	t_list	**current;
 
 	line = ft_calloc(1, sizeof(t_line));
-	line->ands = ft_lstnew(tokens);
-	current = &tokens;
+	line->is_and = is_and;
+	line->tokens = tokens;
+	current = &line->tokens;
 	while (*current)
 	{
 		if (((t_token *)(*current)->content)->type == SUBSHELL)
@@ -50,13 +30,13 @@ t_line	*new_line(t_list *tokens)
 		}
 		if (((t_token *)(*current)->content)->type == LOGICAL)
 		{
-			tokens = logical(line, current);
-			if (!tokens)
-				break ;
-			current = &tokens;
+			line->next = new_line((*current)->next,
+					((t_token *)(*current)->content)->value[0] == '&');
+			ft_lstdelone(*current, free_token);
+			*current = NULL;
+			break ;
 		}
-		else
-			current = &(*current)->next;
+		current = &(*current)->next;
 	}
 	return (line);
 }
@@ -80,20 +60,15 @@ void	parse_line(t_data *data, char *input)
 		data->line = NULL;
 		return ;
 	}
-	data->line = new_line(tokens);
-}
-
-static void	free_and(void *and)
-{
-	ft_lstclear((t_list **) &and, free_token);
+	data->line = new_line(tokens, true);
 }
 
 void	free_line(t_line **line)
 {
 	if (!*line)
 		return ;
-	ft_lstclear(&(*line)->ands, free_and);
-	free_line(&(*line)->or);
+	ft_lstclear(&(*line)->tokens, free_token);
+	free_line(&(*line)->next);
 	free(*line);
 	*line = NULL;
 }

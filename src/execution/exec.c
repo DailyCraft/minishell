@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 15:50:15 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/23 14:13:15 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 22:22:20 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,17 @@
 
 int	execute(t_data *data, t_command *command)
 {
-	int	backup_fds[2];
 	int	status;
 
 	if (!apply_heredocs(data, command))
 		return (130);
 	if (!command->pipe)
 	{
-		backup_fds[0] = dup(STDIN_FILENO);
-		backup_fds[1] = dup(STDOUT_FILENO);
+		command->fds.backups[0] = dup(STDIN_FILENO);
+		command->fds.backups[1] = dup(STDOUT_FILENO);
 		status = run_command(data, command, 1);
-		dup2(backup_fds[0], STDIN_FILENO);
-		dup2(backup_fds[1], STDOUT_FILENO);
-		(close(backup_fds[0]), close(backup_fds[1]));
+		dup2(command->fds.backups[0], STDIN_FILENO);
+		dup2(command->fds.backups[1], STDOUT_FILENO);
 	}
 	else
 	{
@@ -36,26 +34,34 @@ int	execute(t_data *data, t_command *command)
 	}
 	if (command->type != COMMAND || command->args || command->redirects)
 		data->last_status = status;
+	if (command->type == COMMAND && command->args)
+		ft_setenv(data, "_", ft_lstlast(command->args)->content);
+	else if (command->type == COMMAND)
+		ft_setenv(data, "_", NULL);
 	return (status);
 }
 
 static bool	setup_redirects(t_data *data, t_command *command)
 {
-	if (!apply_redirections(data, command))
-		return (false);
-	if (command->fds.last_input == HERE_DOC)
-		dup2(command->fds.heredoc, STDIN_FILENO);
-	else if (command->fds.last_input == INPUT)
-		dup2(command->fds.input, STDIN_FILENO);
-	if (command->fds.output != 0)
-		dup2(command->fds.output, STDOUT_FILENO);
-	if (command->fds.input != 0)
+	bool	result;
+	
+	result = apply_redirections(data, command);
+	if (result)
+	{
+		if (command->fds.last_input == HERE_DOC)
+			dup2(command->fds.heredoc, STDIN_FILENO);
+		else if (command->fds.last_input == INPUT)
+			dup2(command->fds.input, STDIN_FILENO);
+		if (command->fds.output > 0)
+			dup2(command->fds.output, STDOUT_FILENO);
+	}
+	if (command->fds.input > 0)
 		close(command->fds.input);
-	if (command->fds.heredoc != 0)
+	if (command->fds.heredoc > 0)
 		close(command->fds.heredoc);
-	if (command->fds.output != 0)
+	if (command->fds.output > 0)
 		close(command->fds.output);
-	return (true);
+	return (result);
 }
 
 int	run_command(t_data *data, t_command *command, int in_fork)

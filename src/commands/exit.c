@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 13:06:46 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 21:37:17 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 22:10:49 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	exit_command(t_data *data, t_command *command, t_list *args)
 		printf("exit\n");
 	if (ft_lstsize(args) == 1)
 		(free_data(data, command), exit(data->last_status));
-	trim = ft_strtrim(ft_lstgeti(args, 1)->content, " \t\n\v\f\r");
+	trim = ft_strtrim(args->next->content, " \t\n\v\f\r");
 	value = ft_clear_atoll(trim, &unclear);
 	free(trim);
 	if (unclear)

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:00:22 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 14:15:04 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:58:57 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	free_token(void *token)
 {
-	free(((t_token *) token)->value);
+	if (((t_token *) token)->value)
+		free(((t_token *) token)->value);
 	free(token);
 }
 

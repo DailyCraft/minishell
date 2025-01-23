@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 23:02:33 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 23:47:31 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static int	child_external(t_data *data, t_command *command, char *path)
 	char	*program;
 	bool	is_tty;
 
+	ft_setenv(data, "_", path);
 	envp = ft_lsttoa(data->envp, flat_envp);
 	argv = ft_lsttoa(command->args, (char *(*)(void *)) ft_strdup);
 	program = data->program;
@@ -75,7 +76,6 @@ int	run_external(t_data *data, t_command *command, int in_fork)
 int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 {
 	pid_t		pid;
-	t_command	*first_command;
 	int			last_status;
 
 	if (in_fork)
@@ -85,12 +85,12 @@ int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 			return (wait_process(pid, 1));
 	}
 	free_line(&data->line);
-	data->line = new_line(command->tokens);
-	first_command = data->command;
+	data->line = new_line(command->tokens, true);
+	command->tokens = NULL;
+	free_command(data->command);
 	iterate_line(data);
 	last_status = data->last_status;
-	command->tokens = NULL;
 	free_gnl(data->is_tty);
-	free_data(data, first_command);
+	free_data(data, NULL);
 	exit(last_status);
 }

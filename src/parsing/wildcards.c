@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:13:28 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/23 11:26:14 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/23 22:34:45 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ static t_list	*add_tokens(t_command *command, t_list **current, t_list *files)
 	t_list	*prev;
 
 	ft_lstsort(files, (int (*)(void *, void *)) file_cmp);
-	ft_lstadd_back(&command->args, files);
+	if (command)
+		ft_lstadd_back(&command->args, files);
 	next = (*current)->next;
 	ft_lstdelone(*current, free_token);
 	prev = NULL;
@@ -96,7 +97,6 @@ static t_list	*add_tokens(t_command *command, t_list **current, t_list *files)
 	return (prev);
 }
 
-// TODO: $*
 t_list	*wildcards(t_command *command, char *wildcards, t_list **current)
 {
 	DIR				*dir;
@@ -117,6 +117,7 @@ t_list	*wildcards(t_command *command, char *wildcards, t_list **current)
 		return (add_tokens(command, current, files));
 	wildcards = remove_quotes(wildcards);
 	((t_token *)(*current)->content)->value = wildcards;
-	ft_lstadd_back(&command->args, ft_lstnew(wildcards));
+	if (command)
+		ft_lstadd_back(&command->args, ft_lstnew(wildcards));
 	return (*current);
 }
