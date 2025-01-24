@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 10:45:10 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 14:53:44 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:41:34 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,25 @@
 
 void	init_envp(t_data *data, char **envp)
 {
-	char	*lvl;
+	char	*temp;
 
 	while (*envp)
 	{
 		ft_setenv_parse(data, *envp);
 		envp++;
 	}
-	if (ft_getenv(data, "SHLVL"))
+	if (ft_getenv(data, "SHLVL") && data->is_tty)
 	{
-		lvl = ft_itoa(ft_atoi(ft_getenv(data, "SHLVL")) + 1);
-		ft_setenv(data, "SHLVL", lvl);
-		free(lvl);
+		temp = ft_itoa(ft_atoi(ft_getenv(data, "SHLVL")) + 1);
+		ft_setenv(data, "SHLVL", temp);
+		free(temp);
 	}
 	else
 		ft_setenv(data, "SHLVL", "1");
+	temp = getcwd(NULL, 0);
+	ft_setenv(data, "PWD", temp);
+	free(temp);
+	ft_setenv(data, "OLDPWD", NULL);
 }
 
 char	*ft_getenv(t_data *data, char *name)

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 14:52:37 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/21 15:57:26 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:14:14 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,10 @@ char	**ft_lsttoa(t_list *lst, char *(*conv)(void *))
 	i = 0;
 	while (lst)
 	{
-		result[i++] = conv(lst->content);
+		result[i] = conv(lst->content);
 		lst = lst->next;
+		if (result[i])
+			i++;
 	}
 	result[i] = NULL;
 	return (result);

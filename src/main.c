@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:38:42 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/23 16:04:20 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 09:55:21 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static void	loop(t_data *data)
 		rl_clear_history();
 		printf("exit\n");
 	}
+	free_gnl(data->is_tty);
 }
 
 int	main(int argc __attribute__((unused)), char **argv, char **envp)

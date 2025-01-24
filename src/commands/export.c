@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:50:21 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/22 14:52:18 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:42:04 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,14 @@ static int	no_args(t_data *data)
 	lst = dup;
 	while (lst)
 	{
-		printf("export %s=\"%s\"\n",
-			((char **) lst->content)[0],
-			((char **) lst->content)[1]);
+		if (((char **) lst->content)[1])
+		{
+			printf("export %s=\"%s\"\n",
+				((char **) lst->content)[0],
+				((char **) lst->content)[1]);
+		}
+		else
+			printf("export %s\n", ((char **) lst->content)[0]);
 		lst = lst->next;
 	}
 	ft_lstclear(&dup, NULL);

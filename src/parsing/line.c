@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:40:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/23 14:52:22 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:06:17 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	parse_line(t_data *data, char *input)
 
 	if (count_quotes(input) % 2 == 1)
 	{
-		error_msg(data, "%m: syntax error: unclosed quotes", NULL);
+		error_msg(data, "%m: syntax error: unexpected end of file", NULL);
 		data->last_status = 2;
 		data->line = NULL;
 		return ;

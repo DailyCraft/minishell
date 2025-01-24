@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 09:27:47 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 20:20:03 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:04:26 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	check_subshell_lvl(t_data *data, t_list *lst)
 	level = subshell_level(lst);
 	if (level > 0)
 	{
-		error_msg(data, "%m: syntax error: unclosed parenthesis", NULL);
+		error_msg(data, "%m: syntax error: unexpected end of file", NULL);
 		return (false);
 	}
 	else if (level < 0)

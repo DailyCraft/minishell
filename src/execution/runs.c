@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 14:05:54 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/23 23:47:31 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:44:25 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int	run_sub_shell(t_data *data, t_command *command, int in_fork)
 	free_command(data->command);
 	iterate_line(data);
 	last_status = data->last_status;
+	close(STDIN_FILENO);
 	free_gnl(data->is_tty);
 	free_data(data, NULL);
 	exit(last_status);

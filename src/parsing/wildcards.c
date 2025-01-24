@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:13:28 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/24 11:53:25 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:32:40 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,12 @@ static int	file_cmp(char *s1, char *s2)
 
 static t_list	*add_tokens(t_command *command, t_list **current, t_list *files)
 {
+	t_list	*first_file;
 	t_list	*next;
 	t_list	*prev;
 
 	ft_lstsort(files, (int (*)(void *, void *)) file_cmp);
+	first_file = files;
 	if (command)
 		ft_lstadd_back(&command->args, files);
 	next = (*current)->next;
@@ -94,6 +96,8 @@ static t_list	*add_tokens(t_command *command, t_list **current, t_list *files)
 		files = files->next;
 	}
 	*current = next;
+	if (!command)
+		ft_lstclear(&first_file, NULL);
 	return (prev);
 }
 

@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 15:25:52 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/20 10:32:56 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:15:09 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	free_env(void *env)
 
 char	*flat_envp(void *content)
 {
+	if (((char **) content)[1] == NULL)
+		return (NULL);
 	return (ft_strsjoin((const char *[]){((char **) content)[0],
 		"=", ((char **) content)[1], NULL}));
 }

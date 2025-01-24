@@ -6,7 +6,7 @@
 /*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 16:08:58 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/23 14:12:10 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:21:51 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,27 @@ char	*set_venvps(t_data *data, char *line)
 	return (join_and_free(new, ft_substr(line, last_envp, i - last_envp)));
 }
 
+static size_t	add_token(t_list ***current, t_list **prev, char *new, size_t i)
+{
+	size_t	j;
+	char	*sub;
+
+	j = i;
+	while (new[j] && (!ft_isspace(new[j]) || is_in_quotes(new, j)))
+		j++;
+	sub = ft_substr(new, i, j - i);
+	**current = token_new(ARG, sub);
+	*prev = **current;
+	*current = &(**current)->next;
+	return (j);
+}
+
 t_list	*command_venvps(t_data *data, t_list **current)
 {
 	t_list	*next;
 	t_list	*prev;
 	char	*new;
 	size_t	i;
-	size_t	j;
-	char	*sub;
 
 	new = set_venvps(data, ((t_token *)(*current)->content)->value);
 	next = (*current)->next;
@@ -86,16 +99,7 @@ t_list	*command_venvps(t_data *data, t_list **current)
 	while (new[i])
 	{
 		if (!ft_isspace(new[i]))
-		{
-			j = i;
-			while (new[j] && (!ft_isspace(new[j]) || is_in_quotes(new, j)))
-				j++;
-			sub = ft_substr(new, i, j - i);
-			*current = token_new(ARG, sub);
-			prev = *current;
-			current = &(*current)->next;
-			i = j;
-		}
+			i = add_token(&current, &prev, new, i);
 		else
 			i++;
 	}

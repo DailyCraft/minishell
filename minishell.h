@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/24 11:49:47 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/24 16:44:44 by dvan-hum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ void		parse_line(t_data *data, char *input);
 t_command	*parse_command(t_data *data, t_list **tokens);
 void		free_command(void *command);
 bool		is_empty_command_line(char *command_line);
+bool		parse_redirect(t_data *data, t_command *command, t_list *current);
 
 // Quotes
 bool		is_quote(char *line, int index);
@@ -197,7 +198,7 @@ bool		has_wildcards(char *line);
 t_list		**get_close_subshell(t_list **tokens);
 int			subshell_level(t_list *lst);
 
-//	Error
+// Error
 void		unexpected_token(t_data *data, char *token);
 bool		check_valid_type(t_data *data, t_list *lst,
 				t_token *previous, t_token *token);
