@@ -3,27 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:13:28 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/23 22:34:45 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:53:25 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	has_wildcards(char *line)
-{
-	int	i;
+static int	cmp_wildcards(char *file, char *arg);
 
-	i = 0;
-	while (line[i])
+static int	handle_star(char *file, char *arg, int *j, int i)
+{
+	if (arg[i + 1] == '\0')
+		return (1);
+	while (file[*j])
 	{
-		if (line[i] == '*' && !is_in_quotes(line, i))
-			return (true);
-		i++;
+		if (cmp_wildcards(file + *j, arg + i + 1))
+			return (1);
+		(*j)++;
 	}
-	return (false);
+	return (0);
 }
 
 static int	cmp_wildcards(char *file, char *arg)
@@ -42,9 +43,8 @@ static int	cmp_wildcards(char *file, char *arg)
 		{
 			if (j == 0 && file[j] == '.')
 				return (0);
-			while (file[j] && (file[j] != arg[i + 1]
-					|| arg[i + 1] == file[j + 1]))
-				j++;
+			if (handle_star(file, arg, &j, i))
+				return (1);
 		}
 		else if (arg[i] == file[j])
 			j++;

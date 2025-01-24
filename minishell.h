@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dvan-hum <dvan-hum@student.42perpignan.fr> +#+  +:+       +#+        */
+/*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 08:39:30 by dvan-hum          #+#    #+#             */
-/*   Updated: 2025/01/23 22:22:29 by dvan-hum         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:49:47 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ char		*set_venvps(t_data *data, char *line);
 t_list		*command_venvps(t_data *data, t_list **current);
 bool		has_wildcards(char *line);
 t_list		*wildcards(t_command *command, char *wildcards, t_list **current);
+bool		has_wildcards(char *line);
 
 // Subshell
 t_list		**get_close_subshell(t_list **tokens);

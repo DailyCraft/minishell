@@ -6,7 +6,7 @@
 /*   By: cgrasser <cgrasser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:42:11 by cgrasser          #+#    #+#             */
-/*   Updated: 2025/01/22 11:59:21 by cgrasser         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:28:03 by cgrasser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ bool	check_valid_type(t_data *data, t_list *lst,
 		if (token->type == REDIRECT)
 			return (unexpected_token(data, "newline"), false);
 		else
-			return (unexpected_token(data, token->value), false);
+			return (error_msg(data,
+					"%m: syntax error: unexpected end of file", NULL), false);
 	}
 	else
 	{
